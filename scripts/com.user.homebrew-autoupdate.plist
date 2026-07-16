@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Unique identifier for this launchd job -->
+	<key>Label</key>
+	<string>com.user.homebrew-autoupdate</string>
+
+	<!-- Path to the script to run (REPLACE WITH YOUR PATH) -->
+	<key>ProgramArguments</key>
+	<array>
+		<string>/bin/bash</string>
+		<string>$SCRIPT_DIR/brew_upgrade_cron.sh</string>
+	</array>
+
+	<!-- Run at 11:09 AM every day -->
+	<key>StartCalendarInterval</key>
+	<dict>
+		<key>Hour</key>
+		<integer>11</integer>
+		<key>Minute</key>
+		<integer>09</integer>
+	</dict>
+
+	<!-- Output logs (launchd also writes here, in addition to script's own logs) -->
+	<key>StandardOutPath</key>
+	<string>$HOME/Library/Logs/homebrew-cron/launchd-stdout.log</string>
+
+	<key>StandardErrorPath</key>
+	<string>$HOME/Library/Logs/homebrew-cron/launchd-stderr.log</string>
+
+	<!-- Run even when user is not logged in (optional, remove if not needed) -->
+	<key>RunAtLoad</key>
+	<false/>
+
+	<!-- Start the job at system boot (optional) -->
+	<key>KeepAlive</key>
+	<false/>
+
+	<!-- Environment variables for Homebrew -->
+	<key>EnvironmentVariables</key>
+	<dict>
+		<key>PATH</key>
+		<string>/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+		<key>HOME</key>
+		<string>$HOME</string>
+	</dict>
+
+	<!-- Working directory -->
+	<key>WorkingDirectory</key>
+	<string>$HOME</string>
+
+	<!-- Process type (Standard for regular background tasks) -->
+	<key>ProcessType</key>
+	<string>Background</string>
+
+	<!-- Nice level (lower priority to not interfere with user tasks) -->
+	<key>Nice</key>
+	<integer>1</integer>
+</dict>
+</plist>

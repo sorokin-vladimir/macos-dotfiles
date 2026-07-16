@@ -1,0 +1,24 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Claude
+.claude/
+
+# Thumbnails
+._*
+
+# Raycast - local data must never be committed.
+# The databases hold clipboard history, snippets and notes; the extension
+# caches hold account data in plaintext. Back them up outside this repo.
+raycast/backup/
+raycast/extensions/
+raycast/config.json
+raycast/ai/
+
+# Temporary files
+*.swp
+*.swo
+*~
+.*.sw?
