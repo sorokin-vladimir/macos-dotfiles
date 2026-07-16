@@ -1,558 +1,610 @@
-# Настройка macOS окружения
+# macOS environment setup
 
-Скрипт для автоматической настройки всего, что нужно для работы на новом маке.
+**English** | [Русский](SETUP.ru.md)
 
-## Быстрый старт
+The script that sets up everything needed to work on a fresh Mac.
+
+## Quick start
 
 ```bash
-# Перейди в папку с репозиторием
+# Go to the repository
 cd ~/Documents/macos-dotfiles
 
-# Запусти скрипт
-./setup.sh
+# Run the script
+./scripts/setup.sh
 ```
 
-Скрипт задаст несколько вопросов и сам всё поставит.
+It asks a few questions and installs the rest. Prompts take a single keypress;
+the GUI application list is an arrow-key picker.
 
-## Что делает скрипт автоматически
+> An SSH key has to exist **before** you run this: the repository is cloned over
+> SSH. The script never creates one, it only checks.
+> See [README.md](../README.md#step-0-ssh-key).
 
-### 1. Установка Homebrew
+## What the script does
 
-- Проверяет, стоит ли уже Homebrew
-- Если нет - ставит
-- Настраивает PATH для Apple Silicon
+### 1. Install Homebrew
 
-### 2. Установка пакетов через Homebrew
+- Checks whether Homebrew is already there
+- Installs it if not
+- Sets up PATH for Apple Silicon
 
-**CLI инструменты (устанавливаются всегда):**
+### 2. Install packages via Homebrew
 
-- `mise` - менеджер версий языков и инструментов (замена asdf)
-- `thefuck` - исправление ошибок в командах
-- `gnupg` - GPG для подписи коммитов
-- `git` - в macOS свой git есть (идёт с Xcode CLT), но он заметно отстаёт: 2.50.1 против 2.55.0 в brew. Отдельная строка в PATH не нужна - формула не keg-only, а `/opt/homebrew/bin` и так стоит первым, так что brew-версия перекрывает системную сама
-- `tlrc` - упрощенные man-страницы (клиент tldr)
-- `translate-shell` - перевод в терминале
-- `neovim` - текстовый редактор
-- `zsh-autosuggestions` - автодополнение команд в zsh
-- `zsh-syntax-highlighting` - подсветка синтаксиса команд
-- `fd` - быстрый поиск файлов
+**CLI tools (always installed):**
+
+- `mise` - runtime and tool version manager (an asdf replacement)
+- `thefuck` - fixes the previous mistyped command
+- `gnupg` - GPG, for signing commits
+- `git` - macOS ships its own via the Xcode Command Line Tools, but it lags noticeably: 2.50.1 against 2.55.0 in brew. No PATH entry needed - the formula is not keg-only and `/opt/homebrew/bin` already comes first, so the brew build shadows the system one on its own
+- `tlrc` - simplified man pages (a tldr client)
+- `translate-shell` - translation in the terminal
+- `neovim` - text editor
+- `zsh-autosuggestions` - command autosuggestions in zsh
+- `zsh-syntax-highlighting` - command syntax highlighting
+- `fd` - fast file search
 - `fzf` - fuzzy finder
-- `ripgrep` - быстрый grep
-- `lazygit` - TUI для git
-- `lazysql` - TUI для баз данных
-- `yazi` - файловый менеджер в терминале
-- `ast-grep` - поиск и рефакторинг кода по AST
-- `bat` - cat с подсветкой синтаксиса
-- `btop` - монитор ресурсов системы
-- `ncdu` - интерактивный анализ занятого места
-- `curl` - в Homebrew он keg-only, потому что свой curl есть в macOS. `.zshrc` добавляет `/opt/homebrew/opt/curl/bin` в начало PATH, иначе brew-версия не используется. Отличия от системной: OpenSSL вместо LibreSSL, HTTP/3, brotli, zstd
-- `pnpm` - пакетный менеджер Node (`.zshrc` настраивает `PNPM_HOME`)
+- `ripgrep` - fast grep
+- `lazygit` - TUI for git
+- `lazysql` - TUI for databases
+- `yazi` - terminal file manager
+- `ast-grep` - code search and refactoring over the AST
+- `bat` - cat with syntax highlighting
+- `btop` - system resource monitor
+- `ncdu` - interactive disk usage analysis
+- `curl` - keg-only in Homebrew, because macOS ships its own. `.zshrc` puts `/opt/homebrew/opt/curl/bin` first on PATH, otherwise the brew build goes unused. Differences from the system one: OpenSSL instead of LibreSSL, HTTP/3, brotli, zstd
+- `pnpm` - Node package manager (`.zshrc` sets up `PNPM_HOME`)
 - `gh` - GitHub CLI
-- `glow` - рендеринг Markdown в терминале
-- `golangci-lint` - линтер для Go
-- `goreleaser` - сборка и публикация релизов Go
-- `unar` - распаковка архивов
-- `tele` (tap `sorokin-vladimir/tap`) - TUI-клиент Telegram
-- `tele-beta` (tap `sorokin-vladimir/tap`) - бета-канал `tele`, ставится как бинарь `tele-beta` (можно держать вместе со стабильным)
+- `glow` - Markdown rendering in the terminal
+- `golangci-lint` - Go linter
+- `goreleaser` - building and publishing Go releases
+- `unar` - archive extraction
+- `tele` (tap `sorokin-vladimir/tap`) - TUI Telegram client
+- `tele-beta` (tap `sorokin-vladimir/tap`) - the beta channel of `tele`, installed as a `tele-beta` binary so it can live next to the stable one
 
-**Claude Code CLI (спросит перед установкой):**
+**Claude Code CLI (asks first):**
 
-- `claude` - терминальный AI coding assistant от Anthropic
-- Native install: автоматические обновления, устанавливается в `~/.local/bin/claude`
-- После установки запустить: `claude auth login`
+- `claude` - terminal AI coding assistant from Anthropic
+- Native install: self-updating, lands in `~/.local/bin/claude`
+- Afterwards run: `claude auth login`
 
-**GUI приложения (выбор стрелками, space - отметить, enter - подтвердить):**
+**GUI applications (arrow keys to move, `space` toggles, `a` selects all, `enter` confirms, `q` skips):**
 
-Отмеченные по умолчанию:
+Selected by default:
 
-- `anki` - система интервальных повторений
-- `claude` - Claude Desktop от Anthropic
-- `firefox` - браузер
-- `zen` - браузер (бывший `zen-browser`)
-- `hey-desktop` - почтовый клиент HEY (бывший `hey`)
-- `keepassxc` - менеджер паролей
-- `logseq` - заметки и knowledge base
-- `simplenote` - простые заметки
-- `spotify` - музыка
-- `telegram` - мессенджер
-- `vlc` - медиаплеер
-- `ghostty` - эмулятор терминала
-- `raycast` - лаунчер вместо Spotlight
-- `bruno` - API-клиент
-- `dbeaver-community` - клиент баз данных
-- `neohtop` - GUI-монитор процессов и ресурсов (htop on steroids)
-- `orbstack` - Docker и Linux-контейнеры
-- `ungoogled-chromium` - браузер
-- `zed` - редактор кода
-- `claude-usage-tracker` (tap `hamed-elfayome/claude-usage`) - мониторинг использования Claude
+- `anki` - spaced repetition
+- `claude` - Claude Desktop from Anthropic
+- `firefox` - browser
+- `zen` - browser (formerly `zen-browser`)
+- `hey-desktop` - HEY mail client (formerly `hey`)
+- `keepassxc` - password manager
+- `logseq` - notes and knowledge base
+- `simplenote` - plain notes
+- `spotify` - music
+- `telegram` - messenger
+- `vlc` - media player
+- `ghostty` - terminal emulator
+- `raycast` - launcher, replaces Spotlight
+- `bruno` - API client
+- `dbeaver-community` - database client
+- `neohtop` - GUI process and resource monitor (htop on steroids)
+- `orbstack` - Docker and Linux containers
+- `ungoogled-chromium` - browser
+- `zed` - code editor
+- `claude-usage-tracker` (tap `hamed-elfayome/claude-usage`) - Claude usage monitoring
 
-Не отмеченные по умолчанию (редко используемые):
+Not selected by default (rarely used):
 
-- `discord` - мессенджер
-- `transmission` - торрент-клиент
-- `tunnelblick` - VPN клиент
-- `zoom` - видеоконференции
+- `discord` - messenger
+- `transmission` - torrent client
+- `tunnelblick` - VPN client
+- `zoom` - video calls
 
-### 3. Установка Oh My Zsh
+### 3. Install Oh My Zsh
 
-- Ставит Oh My Zsh (фреймворк для zsh)
-- В unattended режиме (не переключает shell в процессе)
+- Installs Oh My Zsh (the zsh framework)
+- Unattended mode, so it does not switch the shell mid-run
 
-### 4. Копирование конфигов
+### 4. Copy the configs
 
 **Shell:**
 
-- `.zshrc` → `~/.zshrc` (старый файл бэкапится)
+- `.zshrc` → `~/.zshrc` (the old file is backed up)
 - `sorokin.zsh-theme` → `~/.oh-my-zsh/custom/themes/`
 
 **Ghostty:**
 
 - `config` → `~/Library/Application Support/com.mitchellh.ghostty/config`
 
-**Neovim (спросит перед копированием):**
+**Neovim (asks first):**
 
 - `config_keymaps.lua` → `~/.config/nvim/lua/config/keymaps.lua`
 - `config_options.lua` → `~/.config/nvim/lua/config/options.lua`
-- `plugins_*.lua` → `~/.config/nvim/lua/plugins/*.lua` (префикс `plugins_` убирается)
+- `plugins_*.lua` → `~/.config/nvim/lua/plugins/*.lua` (the `plugins_` prefix is dropped)
 
-### 5. Настройка Git
+### 5. Configure Git
 
-- Спрашивает `user.name` и `user.email`, Enter оставляет дефолт
-- Дефолт - то, что уже настроено в git; на чистой машине - Vladimir Sorokin <v.sorokin@hey.com>
-- С `--non-interactive` берёт дефолт без вопросов
-- Ставит nvim как редактор по умолчанию (`core.editor`)
-- Добавляет alias `please` для `push --force-with-lease`
+- Asks for `user.name` and `user.email`; Enter keeps the default
+- The default is whatever git already has; on a fresh machine, Vladimir Sorokin <v.sorokin@hey.com>
+- With `--non-interactive` it takes the default without asking
+- Sets nvim as the default editor (`core.editor`)
+- Adds the `please` alias for `push --force-with-lease`
 
-### 6. Установка Git completion
+### 6. Install Git completion
 
-- Качает скрипты автодополнения для Git
-- Сохраняет в `~/.zsh/`
-- Удаляет старый кэш (`.zcompdump`)
+- Downloads the Git completion scripts
+- Stores them in `~/.zsh/`
+- Removes the stale cache (`.zcompdump`)
 
-### 7. Настройка mise
+### 7. Set up mise
 
-- Предлагает поставить Node.js 24 через mise
-  - Команда: `mise use -g node@24`
-- Предлагает поставить Go через mise
-  - Команда: `mise use -g go@latest`
-- Предлагает поставить Go-инструменты (aqua backend)
-  - `mise use -g aqua:sqlc-dev/sqlc` - генератор кода из SQL
-  - `mise use -g aqua:golang-migrate/migrate` - миграции БД
+- Offers to install Node.js 24 through mise
+  - Command: `mise use -g node@24`
+- Offers to install Go through mise
+  - Command: `mise use -g go@latest`
+- Offers to install Go tooling (aqua backend)
+  - `mise use -g aqua:sqlc-dev/sqlc` - code generation from SQL
+  - `mise use -g aqua:golang-migrate/migrate` - database migrations
 
-### 8. Проверка SSH
+### 8. Check SSH
 
-- Только проверяет, есть ли ключ, и печатает инструкцию, если нет
-- Ключ не генерится: чтобы склонить этот репозиторий по SSH (см. README),
-  рабочий ключ уже нужен, так что до скрипта дело всё равно не доходит.
-  Да и `ssh-keygen` интерактивен, а публичный ключ всё равно добавлять
-  в GitHub руками
+- Only checks whether a key exists and prints instructions if it does not
+- No key is generated: cloning this repository over SSH (see the README) already
+  requires a working key, so this branch is unreachable in the documented flow.
+  `ssh-keygen` is interactive anyway, and the public key still has to be
+  registered with GitHub by hand
 
-## Опции командной строки
+## Command line options
 
 ```bash
-# Показать справку
-./setup.sh --help
+# Show the help
+./scripts/setup.sh --help
 
-# Пропустить установку Homebrew (если уже установлен)
-./setup.sh --skip-homebrew
+# Skip installing Homebrew (if it is already there)
+./scripts/setup.sh --skip-homebrew
 
-# Пропустить установку приложений
-./setup.sh --skip-apps
+# Skip installing applications
+./scripts/setup.sh --skip-apps
 
-# Пропустить настройку shell (Oh My Zsh)
-./setup.sh --skip-shell
+# Skip the shell setup (Oh My Zsh)
+./scripts/setup.sh --skip-shell
 
-# Пропустить установку Git completion
-./setup.sh --skip-git-completion
+# Skip installing Git completion
+./scripts/setup.sh --skip-git-completion
 
-# Неинтерактивный режим (все "yes" по умолчанию)
-./setup.sh --non-interactive
+# Non-interactive: take the default of every question
+./scripts/setup.sh --non-interactive
 
-# Комбинация опций
-./setup.sh --skip-homebrew --skip-apps --non-interactive
+# Combined
+./scripts/setup.sh --skip-homebrew --skip-apps --non-interactive
 ```
 
-## Что нужно доделать руками
+`--non-interactive` takes each question's default rather than saying yes to
+everything: applications selected by default get installed, the rarely used ones
+do not. The same mode kicks in automatically when stdin is not a terminal
+(`curl | bash`, CI) - otherwise the script would block on `read`.
 
-### 1. Шрифты ⚠️ ОБЯЗАТЕЛЬНО
+## What you still do by hand
 
-Скрипт ставит шрифт сам - спросит «Install Nerd Fonts?» и поставит
-`font-monaspice-nerd-font`. Вручную то же самое:
+### 1. Fonts ⚠️ REQUIRED
+
+The script installs the font itself - it asks "Install Nerd Fonts?" and pulls
+`font-monaspice-nerd-font`. By hand it is the same:
 
 ```bash
 brew install --cask font-monaspice-nerd-font
 ```
 
-Важно про написание: нужен именно `font-monasp**i**ce-nerd-font`
-(Nerd Fonts переименовывает Monaspace в Monaspice). Обычный `font-monaspace`
-с [github.com/githubnext/monaspace](https://github.com/githubnext/monaspace) -
-это другой каск, без иконок, и zsh-тема с ним поедет. Ghostty настроен на
-`font-family = "MonaspiceNe Nerd Font Mono Light"`.
+Mind the spelling: it is `font-monaspice-nerd-font`, with an `i`. The reason is
+licensing - `Monaspace` is a Reserved Font Name under the SIL OFL, so Nerd Fonts
+may not ship a patched build under that name. Plain `font-monaspace` from
+[github.com/githubnext/monaspace](https://github.com/githubnext/monaspace) is a
+different cask with no glyphs, and the zsh theme will break with it. Ghostty is
+configured for `font-family = "MonaspiceNe Nerd Font Mono Light"`.
 
-Проверить, что иконки видны: `./shell/check-nerd-fonts.sh`
+Verify the icons render: `./shell/check-nerd-fonts.sh`
 
-### 2. Git (если нужно поменять)
+### 2. Git (if you want it different)
 
-**Скрипт спрашивает при установке (Enter - оставить дефолт):**
+**The script asks during setup (Enter keeps the default):**
 
-- `user.name` - дефолт: текущий из git, иначе Vladimir Sorokin
-- `user.email` - дефолт: текущий из git, иначе v.sorokin@hey.com
+- `user.name` - default: whatever git has, otherwise Vladimir Sorokin
+- `user.email` - default: whatever git has, otherwise v.sorokin@hey.com
 
-**Ставит без вопросов:**
+**Set without asking:**
 
 - `core.editor`: nvim
 
-**Если захочешь поменять:**
+**To change it later:**
 
 ```bash
-# Поменять имя и email
+# Name and email
 git config --global user.name "Your Name"
 git config --global user.email "your.email@example.com"
 
-# Поменять редактор
+# Editor
 git config --global core.editor "vim"
 
-# Посмотреть что стоит
+# Inspect
 git config --global user.name
 git config --global user.email
 git config --global core.editor
 ```
 
-### 3. GPG для подписи коммитов (если надо)
+### 3. GPG for signing commits (optional)
 
 ```bash
-# Сгенери GPG ключ
+# Generate a GPG key
 gpg --full-generate-key
 
-# Посмотри список ключей
+# List the keys
 gpg --list-secret-keys --keyid-format=long
 
-# Настрой Git
+# Configure Git
 git config --global user.signingkey YOUR_KEY_ID
 git config --global commit.gpgsign true
 
-# Добавь публичный ключ в GitHub/GitLab
+# Add the public key to GitHub/GitLab
 gpg --armor --export YOUR_KEY_ID
 ```
 
-### 4. Перезапуск терминала
+### 4. Restart the terminal
 
-После установки перезапусти терминал или сделай:
+After installing, restart the terminal or run:
 
 ```bash
 source ~/.zshrc
 ```
 
-### 5. Проверка Neovim
+### 5. Check Neovim
 
-После первого запуска Neovim проверь что всё ок:
+After the first Neovim start, make sure everything is fine:
 
 ```bash
 nvim
-# В Neovim выполни:
+# Inside Neovim:
 :LazyHealth
 ```
 
-### 6. SSH ключ для GitHub/GitLab
+### 6. SSH key for GitHub/GitLab
 
-Скрипт ключ не создаёт - только проверяет наличие. Если его нет:
+The script does not create a key, it only checks. If there is none:
 
 ```bash
-# Создать
+# Create it
 ssh-keygen -t ed25519 -C "your@email"
 
-# Положить в agent, пароль подхватится из Keychain
+# Add it to the agent; Keychain supplies the passphrase
 ssh-add --apple-use-keychain ~/.ssh/id_ed25519
 
-# Скопировать публичный ключ
+# Copy the public key
 pbcopy < ~/.ssh/id_ed25519.pub
 ```
 
-Отдельный ssh-agent поднимать не надо: в macOS он уже запущен через launchd.
-`.zshrc` только докидывает ключ, если агент пустой.
+No need to start your own ssh-agent: macOS already runs one through launchd.
+`.zshrc` only adds the key when the agent has none.
 
-Добавь его:
+Register it:
 
 - GitHub: Settings → SSH and GPG keys → New SSH key
 - GitLab: Preferences → SSH Keys → Add key
 
-### 7. Claude Code CLI (если поставил)
+### 7. Claude Code CLI (if installed)
 
 ```bash
-# Авторизуйся через браузер
+# Authenticate through the browser
 claude auth login
 
-# Проверь версию
+# Check the version
 claude --version
 
-# Автообновления включены по умолчанию
+# Auto-updates are on by default
 ```
 
-### 8. Ollama (если нужны локальные LLM)
+### 8. Ollama (for local LLMs)
 
 ```bash
-# Поставь Ollama
+# Install Ollama
 brew install ollama
 
-# Запусти сервис
+# Start the service
 brew services start ollama
 
-# Качай модели
+# Pull the models
 ollama pull codellama:13b
 ollama pull deepseek-coder:6.7b
 ollama pull llama2:7b
 ollama pull mistral
 ```
 
-### 9. pnpm (если используешь)
+### 9. Terminal.app theme (if you use the stock terminal)
 
-pnpm уже настроен в `.zshrc`, но если нужна глобальная установка:
+If you use Terminal.app rather than Ghostty:
 
-```bash
-# Через npm
-npm install -g pnpm
+1. Open Terminal → Preferences → Profiles
+2. Gear button → Import...
+3. Pick `terminal/sorokin.terminal-theme.terminal`
+4. Set it as Default
 
-# Или через Homebrew
-brew install pnpm
-```
+### 10. Keyboard (if you have a kbd67mkiirgbv3)
 
-### 10. Terminal.app тема (если используешь стандартный терминал)
+- `misc/kbd67mkiirgbv3.layout.json` is the layout
+- Import it through VIA or similar
 
-Если не используешь Ghostty, а стандартный Terminal.app:
+## Verification
 
-1. Открой Terminal → Preferences → Profiles
-2. Кнопка с шестеренкой → Import...
-3. Выбери `sorokin.terminal-theme.terminal`
-4. Поставь как Default
-
-### 11. Клавиатура (если есть kbd67mkiirgbv3)
-
-Если у тебя kbd67mkiirgbv3:
-
-- Файл `kbd67mkiirgbv3.layout.json` - это layout
-- Импорт через VIA или другую софтину
-
-## Проверка
-
-Проверь что всё работает:
+Check that everything works:
 
 ```bash
-# CLI инструменты
+# CLI tools
 brew --version
 mise --version
 thefuck --version
 nvim --version
 git --version
 
-# Claude Code CLI (если ставил)
+# Claude Code CLI (if installed)
 claude --version
 
-# Настройки Git
+# Git settings
 git config --global user.name
 git config --global user.email
 git config --global core.editor
 
-# Node.js через mise
+# Node.js through mise
 node --version
 npm --version
 
-# Shell плагины
-# Введи неправильную команду, ESC, потом fuck
+# Shell plugins
+# Type a wrong command, press ESC, then run fuck
 
-# Алиасы
+# Aliases
 alias | grep -E "(glg|gl|ter|tre|submodule)"
 
 # Yazi
-y  # должен открыть файловый менеджер
+y  # should open the file manager
 
 # Neovim
-nvim  # должен открыться с LazyVim
+nvim  # should open with LazyVim
 ```
 
-## Полезные команды после установки
+## Handy commands afterwards
 
 ```bash
 # Git
-glg                    # Красивый git log с графом
-gl                     # Git log без графа
+glg                    # Pretty git log with a graph
+gl                     # Git log without the graph
 git please             # git push --force-with-lease
-submodule              # Обновить submodules
+submodule              # Update submodules
 
-# Переводы
-ter hello              # Перевести с EN на RU
-tre привет             # Перевести с RU на EN
+# Translation
+ter hello              # EN to RU
+tre привет             # RU to EN
 
-# Навигация
-cic                    # Перейти в iCloud Drive
-cl                     # Перейти в Logseq documents
-n                      # Открыть neovim в текущей директории
-y                      # Открыть yazi file manager
+# Navigation
+cic                    # Jump to iCloud Drive
+n                      # Open neovim in the current directory
+y                      # Open yazi; on exit, cd to where you ended up
+
+# Maintenance
+bupd                   # brew update && upgrade && cleanup
+lg                     # lazygit
 
 # mise
-mise use node@20       # Установить Node.js 20 в текущем проекте
-mise use -g python@3.11 # Установить Python 3.11 глобально
-mise ls                # Показать установленные инструменты
+mise use node@20       # Node.js 20 for the current project
+mise use -g python@3.11 # Python 3.11 globally
+mise ls                # List installed tools
 
 # thefuck
-fuck                   # Исправить последнюю команду (после ESC)
+fuck                   # Fix the previous command (after ESC)
 ```
 
-## Дополнительные инструменты (не в скрипте)
+## Extra tools (not in the script)
 
-Эти инструменты не устанавливаются через `setup.sh`, но полезны знать.
+These are not installed by `setup.sh`, but worth knowing about.
+
+### grandperspective
+
+GUI disk usage analysis with a treemap. The script only carries the CLI option
+(`ncdu`).
+
+- Install: `brew install --cask grandperspective`
 
 ### vhs
 
-Записывает сессии терминала в GIF/MP4 по сценарию (`.tape`-файл): вводимые команды, тайминги, тема, размер окна.
-Удобно для демок в README — запись воспроизводима и правится как код, без ручного перезаписывания видео.
+Records terminal sessions to GIF/MP4 from a script (a `.tape` file): the typed
+commands, timings, theme, window size. Good for README demos - the recording is
+reproducible and edited like code, with no manual re-shoots.
 
-- Установка: `brew install vhs`
-- Репозиторий: [github.com/charmbracelet/vhs](https://github.com/charmbracelet/vhs)
+- Install: `brew install vhs`
+- Repository: [github.com/charmbracelet/vhs](https://github.com/charmbracelet/vhs)
 
 ### nethack
 
-Классический roguelike в терминале.
+The classic terminal roguelike.
 
-- Установка: `brew install nethack`
+- Install: `brew install nethack`
 
 ### Pake
 
-Оборачивает любой сайт в нативное лёгкое десктопное приложение (macOS, Windows, Linux).
-Использует Tauri/Rust вместо Electron — приложения весят ~5 МБ.
+Wraps any website into a lightweight native desktop app (macOS, Windows, Linux).
+Uses Tauri/Rust rather than Electron, so the apps weigh around 5 MB.
 
-- Установка: `npm install -g pake-cli`
-- Репозиторий: [github.com/tw93/Pake](https://github.com/tw93/Pake)
+- Install: `npm install -g pake-cli`
+- Repository: [github.com/tw93/Pake](https://github.com/tw93/Pake)
 
 ### llm-checker
 
-CLI инструмент, анализирует характеристики железа (RAM, GPU, VRAM) и рекомендует оптимальные локальные LLM модели.
+A CLI tool that reads your hardware (RAM, GPU, VRAM) and recommends local LLM
+models that fit.
 
 ### bento-pdf
 
-Self-hosted веб-приложение для работы с PDF. Умеет объединять, разделять, сжимать, конвертировать, делать OCR и многое другое. Разворачивается через Docker.
+A self-hosted web app for PDFs: merge, split, compress, convert, OCR and more.
+Deployed with Docker.
 
-- Репозиторий: [github.com/alam00000/bentopdf](https://github.com/alam00000/bentopdf)
+- Repository: [github.com/alam00000/bentopdf](https://github.com/alam00000/bentopdf)
 
-## Если что-то сломалось
+## When something breaks
 
-### Homebrew не находится
+### Homebrew is not found
 
 ```bash
-# Для Apple Silicon
+# Apple Silicon
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
-# Или просто перезапусти терминал
+# Or just restart the terminal
 ```
 
-### zsh completion тупит
+### zsh completion misbehaves
 
 ```bash
-# Снеси кэш и перезагрузи
+# Drop the cache and reload
 rm ~/.zcompdump*
 source ~/.zshrc
 ```
 
-### Oh My Zsh тема не работает
+### The Oh My Zsh theme does not load
 
 ```bash
-# Проверь что файл темы на месте
+# Check the theme file is there
 ls ~/.oh-my-zsh/custom/themes/sorokin.zsh-theme
 
-# Проверь .zshrc
+# Check .zshrc
 grep "ZSH_THEME" ~/.zshrc
-# Должно быть: ZSH_THEME="sorokin"
+# Expected: ZSH_THEME="sorokin"
 ```
 
-### Neovim конфиг не работает
+### The Neovim config does not work
 
 ```bash
-# Снеси конфиг
+# Wipe the config
 rm -rf ~/.config/nvim
 
-# Запусти скрипт для копирования
+# Re-run the script to copy it back
 cd ~/Documents/macos-dotfiles
-./setup.sh --skip-homebrew --skip-apps --skip-shell --non-interactive
+./scripts/setup.sh --skip-homebrew --skip-apps --skip-shell --non-interactive
 
-# Запусти Neovim - плагины поставятся сами
+# Start Neovim - the plugins install themselves
 nvim
 ```
 
-### Ghostty конфиг не применяется
+### The Ghostty config is not applied
 
 ```bash
-# Проверь что файл на месте
+# Check the file is there
 ls ~/Library/Application\ Support/com.mitchellh.ghostty/config
 
-# Перезапусти Ghostty или Cmd+R
+# Restart Ghostty, or Cmd+R
 ```
 
-### GPG signing не пашет
+### GPG signing does not work
 
 ```bash
-# Проверь что GPG_TTY есть
+# Check GPG_TTY is set
 echo $GPG_TTY
 
-# Если пусто, добавь в .zshrc (должно уже быть):
+# If empty, add it to .zshrc (it should already be there):
 export GPG_TTY=$(tty)
 
-# Перезагрузи shell
+# Reload the shell
 source ~/.zshrc
 ```
 
-## Обновление конфигов
-
-Если обновил файлы в репе и хочешь применить изменения:
+### curl is still the system one
 
 ```bash
-# Только конфиги (без установки пакетов)
-./setup.sh --skip-homebrew --skip-apps --skip-shell --non-interactive
+# Should print /opt/homebrew/opt/curl/bin/curl
+command -v curl
 
-# Или руками
+# If it says /usr/bin/curl, .zshrc did not load
+source ~/.zshrc
+```
+
+### ssh-agent processes are piling up
+
+Symptom: `pgrep -x ssh-agent | wc -l` reports dozens or hundreds.
+
+The cause was `eval "$(ssh-agent -s)"` in `.zshrc`, which started a fresh agent
+on every shell. The current config no longer does that, but old processes stay
+around:
+
+```bash
+pkill -x ssh-agent   # the launchd agent survives this
+source ~/.zshrc
+```
+
+## Updating the configs
+
+To apply changes you made in the repo:
+
+```bash
+# Configs only, no package installs
+./scripts/setup.sh --skip-homebrew --skip-apps --skip-shell --non-interactive
+
+# Or by hand
 cp .zshrc ~/.zshrc
-cp sorokin.zsh-theme ~/.oh-my-zsh/custom/themes/
-cp config ~/Library/Application\ Support/com.mitchellh.ghostty/config
+cp shell/sorokin.zsh-theme ~/.oh-my-zsh/custom/themes/
+cp terminal/config ~/Library/Application\ Support/com.mitchellh.ghostty/config
 source ~/.zshrc
 ```
 
-## Откат
-
-Если нужно всё откатить:
+## Rolling back
 
 ```bash
-# Вернуть старый .zshrc
+# Restore the old .zshrc
 cp ~/.zshrc.backup ~/.zshrc
 
-# Снести Oh My Zsh
+# Remove Oh My Zsh
 uninstall_oh_my_zsh
 
-# Снести Neovim конфиг
+# Remove the Neovim config
 rm -rf ~/.config/nvim
 
-# Снести Homebrew (аккуратно!)
+# Remove Homebrew (careful!)
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/uninstall.sh)"
 ```
 
-## Что где лежит
+## Where things live
 
 ```
 macos-dotfiles/
-├── setup.sh                      # Скрипт установки
-├── SETUP.md                      # Эта документация
-├── README.md                     # Общая инфа
-├── .zshrc                        # Конфиг zsh
-├── sorokin.zsh-theme            # Кастомная тема Oh My Zsh
-├── config                        # Конфиг Ghostty
-├── config_keymaps.lua           # Кейбинды Neovim
-├── config_options.lua           # Опции Neovim
-├── plugins_*.lua                # Плагины Neovim (копируются без префикса)
-├── kbd67mkiirgbv3.layout.json  # Layout клавиатуры
-└── sorokin.terminal-theme.terminal # Тема для Terminal.app
+├── .zshrc                            # zsh config
+├── README.md                         # Overview (English)
+├── README.ru.md                      # Overview (Russian)
+├── LICENSE                           # MIT
+├── docs/
+│   ├── SETUP.md                      # This file
+│   ├── SETUP.ru.md                   # This file (Russian)
+│   └── HOMEBREW_AUTOUPDATE.md
+├── scripts/
+│   ├── setup.sh                      # The setup script
+│   ├── brew_upgrade_logged.sh
+│   ├── brew_upgrade_cron.sh
+│   ├── install_homebrew_autoupdate.sh
+│   ├── raycast_backup.sh
+│   ├── raycast_restore.sh
+│   └── com.user.homebrew-autoupdate.plist
+├── shell/
+│   ├── sorokin.zsh-theme             # Custom Oh My Zsh theme
+│   └── check-nerd-fonts.sh
+├── terminal/
+│   ├── config                        # Ghostty config
+│   └── sorokin.terminal-theme.terminal
+├── nvim/
+│   ├── config/                       # Keymaps and options
+│   └── plugins/                      # Plugins
+├── raycast/
+└── misc/
+    └── kbd67mkiirgbv3.layout.json    # Keyboard layout
 ```
 
-## Про скрипт
+## About the script
 
-- Можно запускать сколько угодно раз - проверяет что уже стоит
-- Создаёт бэкапы перед заменой файлов
-- Работает только на macOS
-- Поддерживает Intel и Apple Silicon
-- Все интерактивные вопросы можно скипнуть через флаги
+- Safe to run repeatedly - it checks what is already installed
+- Backs files up before replacing them
+- macOS only
+- Works on Intel and Apple Silicon
+- Every prompt can be skipped with a flag
+- Targets the `/bin/bash` that macOS ships, which is bash 3.2 - so no
+  associative arrays or anything else from bash 4+

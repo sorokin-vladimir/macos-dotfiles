@@ -1,35 +1,37 @@
 # macos-dotfiles
 
-Персональная конфигурация macOS окружения для разработки.
+**English** | [Русский](README.ru.md)
 
-## Быстрый старт
+Personal macOS development environment configuration.
 
-### Шаг 0: SSH-ключ
+## Quick start
 
-Делается **до** всего остального: репозиторий клонируется по SSH, поэтому
-рабочий ключ нужен раньше, чем появится сам скрипт. Скрипт ключ не создаёт -
-только проверяет, что он есть.
+### Step 0: SSH key
+
+Do this **before** anything else: the repository is cloned over SSH, so a
+working key has to exist before the script does. The script never creates a
+key - it only checks that one is there.
 
 ```bash
-# Создать ключ
+# Create a key
 ssh-keygen -t ed25519 -C "your@email"
 
-# Положить в agent, пароль подхватится из Keychain
+# Add it to the agent; Keychain supplies the passphrase
 ssh-add --apple-use-keychain ~/.ssh/id_ed25519
 
-# Скопировать публичный ключ - и добавить на github.com/settings/keys
+# Copy the public key, then add it at github.com/settings/keys
 pbcopy < ~/.ssh/id_ed25519.pub
 ```
 
-Отдельный `ssh-agent` поднимать не надо: в macOS он уже запущен через launchd.
+No need to start your own `ssh-agent`: macOS already runs one through launchd.
 
-Проверить, что GitHub принял ключ:
+Check that GitHub accepts the key:
 
 ```bash
 ssh -T git@github.com
 ```
 
-### Шаг 1: Клонировать и запустить
+### Step 1: Clone and run
 
 ```bash
 git clone git@github.com:sorokin-vladimir/macos-dotfiles.git ~/Documents/macos-dotfiles
@@ -38,85 +40,88 @@ cd ~/Documents/macos-dotfiles
 ./scripts/setup.sh
 ```
 
-Скрипт установит Homebrew, все необходимые инструменты, настроит shell и git,
-проверит SSH и скопирует конфигурационные файлы.
+The script installs Homebrew and the tooling, configures the shell and git,
+checks SSH, and copies the config files into place.
 
-📖 Подробная инструкция: **[docs/SETUP.md](docs/SETUP.md)**
+📖 Full walkthrough: **[docs/SETUP.md](docs/SETUP.md)**
 
-## Содержание
+## Contents
 
-- [🐚 Shell Configuration](#-shell-configuration) - zsh с oh-my-zsh
-- [🖥️ Terminal](#%EF%B8%8F-terminal) - Ghostty и Terminal.app
+- [🐚 Shell Configuration](#-shell-configuration) - zsh with oh-my-zsh
+- [🖥️ Terminal](#%EF%B8%8F-terminal) - Ghostty and Terminal.app
 - [🚀 Productivity](#-productivity) - Raycast launcher
 - [📝 Editors](#-editors) - Neovim
-- [🔧 Scripts](#-scripts) - Автоматизация и обслуживание
-- [📚 Documentation](#-documentation) - Детальные инструкции
-- [🎹 Miscellaneous](#-miscellaneous) - Дополнительные конфиги
+- [🔧 Scripts](#-scripts) - Automation and maintenance
+- [📚 Documentation](#-documentation) - Detailed guides
+- [🎹 Miscellaneous](#-miscellaneous) - Everything else
+
+> Note: the per-component READMEs linked below are still in Russian. The two
+> entry points - this file and [docs/SETUP.md](docs/SETUP.md) - are bilingual.
 
 ---
 
 ## 🐚 Shell Configuration
 
-**Папка:** [`shell/`](shell/)
+**Directory:** [`shell/`](shell/)
 
-- **[.zshrc](.zshrc)** (в корне) - основной конфиг zsh
-- **[sorokin.zsh-theme](shell/sorokin.zsh-theme)** - кастомная тема с git индикаторами
+- **[.zshrc](.zshrc)** (repo root) - the main zsh config
+- **[sorokin.zsh-theme](shell/sorokin.zsh-theme)** - custom theme with git indicators
 
-**Основные возможности:**
+**Highlights:**
 - mise, thefuck, zsh-autosuggestions, zsh-syntax-highlighting
-- Git алиасы: `glg`, `gl`, `submodule`
-- Навигация: `cic` (iCloud), `cl` (Logseq)
-- Утилиты: `ter`/`tre` (перевод), `n` (neovim), `y` (yazi)
+- Git aliases: `glg`, `gl`, `submodule`
+- Navigation: `cic` (iCloud), `y` (yazi, cds into the directory you exit from)
+- Utilities: `ter`/`tre` (translate), `n` (neovim), `lg` (lazygit), `bupd` (update brew)
 
-📖 Подробнее: **[shell/README.md](shell/README.md)**
+📖 More: **[shell/README.md](shell/README.md)** (in Russian)
 
 ---
 
 ## 🖥️ Terminal
 
-**Папка:** [`terminal/`](terminal/)
+**Directory:** [`terminal/`](terminal/)
 
-### Ghostty (основной)
-- TokyoNight тема (Moon/Day)
-- Шрифт: Monaspace Neon Var
-- Vim-style навигация: `cmd+shift+hjkl`
+### Ghostty (primary)
+- TokyoNight theme (Moon/Day)
+- Font: MonaspiceNe Nerd Font Mono Light
+- Vim-style navigation: `cmd+shift+hjkl`
 - Quick terminal: `cmd+g`
 
 ### Terminal.app (legacy)
-- Старая тема для совместимости
+- Old theme, kept for compatibility
 
-📖 Подробнее: **[terminal/README.md](terminal/README.md)**
+📖 More: **[terminal/README.md](terminal/README.md)** (in Russian)
 
 ---
 
 ## 🚀 Productivity
 
-**Папка:** [`raycast/`](raycast/)
+**Directory:** [`raycast/`](raycast/)
 
-### Raycast - Productivity Launcher
+### Raycast - productivity launcher
 
-Замена Spotlight с расширенными возможностями:
-- Управление окнами (window management)
-- История буфера обмена
-- Интеграция с приложениями (Spotify)
-- Калькулятор и конвертер валют
-- Сниппеты и быстрые заметки
+A Spotlight replacement:
+- Window management
+- Clipboard history
+- App integrations (Spotify)
+- Calculator and currency conversion
+- Snippets and quick notes
 
-**Установленные расширения:**
-- **Spotify Player** - управление Spotify с menu bar
-- **Google Translate** - быстрый перевод
+**Installed extensions:**
+- **Spotify Player** - control Spotify from the menu bar
+- **Google Translate** - quick translation
 - **URL Encoder/Decoder**
 
-**Настройка на новой машине:**
+**Setting up a new machine:**
 ```bash
-./scripts/raycast_restore.sh  # Восстановить из backup
+./scripts/raycast_restore.sh  # Restore from backup
 ```
 
-Затем:
-1. Отключить Spotlight в System Settings
-2. Проверить хоткей `Ctrl+Space` в Raycast (должен восстановиться автоматически)
+Then:
+1. Disable Spotlight in System Settings
+2. Confirm the `Ctrl+Space` hotkey in Raycast (it should restore automatically)
 
-📖 Подробнее: **[raycast/README.md](raycast/README.md)**
+📖 More: **[raycast/README.md](raycast/README.md)** (in Russian)
 
 ---
 
@@ -124,85 +129,88 @@ cd ~/Documents/macos-dotfiles
 
 ### Neovim + LazyVim
 
-**Папка:** [`nvim/`](nvim/)
+**Directory:** [`nvim/`](nvim/)
 
 ```
 nvim/
-├── config/           # Кейбинды и опции
+├── config/           # Keymaps and options
 │   ├── keymaps.lua
 │   └── options.lua
-└── plugins/          # Настройки плагинов
+└── plugins/          # Plugin configuration
     ├── cmp.lua
     ├── codeium.lua
     ├── colorscheme.lua
     └── surround.lua
 ```
 
-**Основные кейбинды:**
-- `jj`/`kk` - выход из insert mode
+**Key bindings:**
+- `jj`/`kk` - leave insert mode
 - `<leader>dl` - console.log
-- `<leader>cP` - показать путь к файлу
-- `Shift+H`/`Shift+L` - навигация между буферами
+- `<leader>cP` - show the file path
+- `Shift+H`/`Shift+L` - move between buffers
 
-📖 Подробнее: **[nvim/README.md](nvim/README.md)**
+📖 More: **[nvim/README.md](nvim/README.md)** (in Russian)
 
 ---
 
 ## 🔧 Scripts
 
-**Папка:** [`scripts/`](scripts/)
+**Directory:** [`scripts/`](scripts/)
 
 ### setup.sh
-Главный скрипт автоматической установки окружения.
+The main environment bootstrap script.
 
 ```bash
-./scripts/setup.sh                    # Полная установка
-./scripts/setup.sh --non-interactive  # Без вопросов
-./scripts/setup.sh --skip-apps        # Пропустить приложения
+./scripts/setup.sh                    # Full install
+./scripts/setup.sh --non-interactive  # No prompts, takes the defaults
+./scripts/setup.sh --skip-apps        # Skip applications
 ```
 
-### Homebrew Maintenance
+Prompts take a single keypress, and the GUI application list is an arrow-key
+picker: `space` toggles, `a` selects all, `enter` confirms, `q` skips.
 
-**Ручное обновление:**
+### Homebrew maintenance
+
+**Manual update:**
 ```bash
 ./scripts/brew_upgrade_logged.sh
 ```
 
-**Автоматическое обновление (launchd):**
+**Automatic update (launchd):**
 ```bash
-./scripts/brew_upgrade_cron.sh                    # Тест
-./scripts/install_homebrew_autoupdate.sh          # Установка (рекомендуется)
+./scripts/brew_upgrade_cron.sh                    # Dry run
+./scripts/install_homebrew_autoupdate.sh          # Install (recommended)
 ```
 
-Скрипт будет запускаться ежедневно в 10:00 с уведомлениями о:
-- Количестве доступных обновлений
-- Проблемах из `brew doctor`
-- Успехе/ошибке операции
+It then runs daily at 11:09 and notifies about:
+- How many updates are available
+- Problems reported by `brew doctor`
+- Whether the run succeeded
 
-📖 Подробнее: **[scripts/README.md](scripts/README.md)** | **[docs/HOMEBREW_AUTOUPDATE.md](docs/HOMEBREW_AUTOUPDATE.md)**
+📖 More: **[scripts/README.md](scripts/README.md)** | **[docs/HOMEBREW_AUTOUPDATE.md](docs/HOMEBREW_AUTOUPDATE.md)** (in Russian)
 
 ---
 
 ## 📚 Documentation
 
-**Папка:** [`docs/`](docs/)
+**Directory:** [`docs/`](docs/)
 
-- **[SETUP.md](docs/SETUP.md)** - полная инструкция по установке (на русском)
-- **[HOMEBREW_AUTOUPDATE.md](docs/HOMEBREW_AUTOUPDATE.md)** - настройка автообновлений
+- **[SETUP.md](docs/SETUP.md)** - full installation walkthrough
+- **[HOMEBREW_AUTOUPDATE.md](docs/HOMEBREW_AUTOUPDATE.md)** - auto-update setup (in Russian)
 
 ---
 
 ## 🎹 Miscellaneous
 
-**Папка:** [`misc/`](misc/)
+**Directory:** [`misc/`](misc/)
 
-- Конфигурация клавиатуры KBD67 MKII RGB V3 (VIA)
+- KBD67 MKII RGB V3 keyboard layout (VIA)
 
-📖 Подробнее: **[misc/README.md](misc/README.md)**
+📖 More: **[misc/README.md](misc/README.md)** (in Russian)
 
 ---
 
-## Установка компонентов
+## Installing the pieces by hand
 
 ### Homebrew
 
@@ -210,7 +218,7 @@ nvim/
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
 
-### Пакеты
+### Packages
 
 **CLI tools:**
 ```bash
@@ -225,10 +233,17 @@ brew trust --tap sorokin-vladimir/tap
 brew install tele tele-beta
 ```
 
+Two of these need a word of explanation:
+
+- **curl** is keg-only in Homebrew, because macOS ships its own. `.zshrc` puts
+  `/opt/homebrew/opt/curl/bin` ahead on PATH, otherwise the brew build would sit
+  unused. It brings OpenSSL instead of LibreSSL, plus HTTP/3, brotli and zstd.
+- **git** needs no such entry: the formula is not keg-only and
+  `/opt/homebrew/bin` already comes first, so it shadows the older Apple git
+  that ships with the Xcode Command Line Tools.
+
 **GUI apps:**
 ```bash
-brew install --cask claude-code
-
 # Tap for Claude Usage Tracker
 brew tap hamed-elfayome/claude-usage
 brew trust --tap hamed-elfayome/claude-usage
@@ -239,12 +254,13 @@ brew install --cask anki claude firefox \
   orbstack ungoogled-chromium zed claude-usage-tracker
 ```
 
-**Редко используемые:**
+**Rarely used:**
 ```bash
 brew install --cask discord transmission tunnelblick zoom
 ```
 
-**GUI-альтернатива для анализа диска** (не ставится скриптом, в наборе есть CLI - `ncdu`):
+**GUI alternative for disk usage** (not installed by the script; `ncdu` covers
+this from the CLI):
 ```bash
 brew install --cask grandperspective
 ```
@@ -252,10 +268,13 @@ brew install --cask grandperspective
 ### Claude Code CLI
 
 ```bash
-# Native install
+# Native install - what setup.sh does
 curl -fsSL https://claude.ai/install.sh | bash
 claude auth login
 ```
+
+A `claude-code` cask exists too, but the script uses the native install: it
+self-updates and lands in `~/.local/bin/claude`.
 
 ### Oh My Zsh
 
@@ -263,31 +282,34 @@ claude auth login
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 ```
 
-### Шрифты ⚠️ ОБЯЗАТЕЛЬНО
+### Fonts ⚠️ REQUIRED
 
 ```bash
-# Nerd-патченый Monaspace. Ghostty настроен именно на него:
+# Nerd-patched Monaspace. This is what Ghostty is configured for:
 # font-family = "MonaspiceNe Nerd Font Mono Light"
 brew install --cask font-monaspice-nerd-font
 ```
 
-Обрати внимание на написание: каск называется `font-monasp**i**ce-nerd-font`
-(Nerd Fonts переименовывает Monaspace в Monaspice). Обычный `font-monaspace`
-не подойдёт - в нём нет иконок, которые использует zsh-тема.
+Mind the spelling: the cask is `font-monaspice-nerd-font`, with an `i`. The
+reason is licensing - `Monaspace` is a Reserved Font Name under the SIL OFL, so
+Nerd Fonts may not ship a patched build under that name. Plain `font-monaspace`
+will not do: it has none of the glyphs the zsh theme draws.
 
-Исходники шрифта: [github.com/githubnext/monaspace](https://github.com/githubnext/monaspace)
+Verify the icons render: `./shell/check-nerd-fonts.sh`
+
+Font upstream: [github.com/githubnext/monaspace](https://github.com/githubnext/monaspace)
 
 ### Git
 
 ```bash
-# Алиас для force push
+# Force-push alias
 git config --global alias.please 'push --force-with-lease'
 
 # Git completion
 mkdir -p ~/.zsh && cd ~/.zsh
 curl -o git-completion.bash https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash
 curl -o _git https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.zsh
-rm ~/.zcompdump  # После первого запуска
+rm ~/.zcompdump  # After the first run
 ```
 
 ### Mise
@@ -301,25 +323,26 @@ mise use -g aqua:sqlc-dev/sqlc
 mise use -g aqua:golang-migrate/migrate
 ```
 
-### npm Global Packages
+### npm global packages
 
 ```bash
 npm install -g @rivolink/leaf   # Terminal Markdown viewer
 ```
 
-**leaf** — просмотрщик Markdown в терминале: подсветка синтаксиса, рендеринг LaTeX, TOC с активной секцией, live reload, fuzzy-поиск файлов, 5 тем.
+**leaf** renders Markdown in the terminal: syntax highlighting, LaTeX, a TOC
+that tracks the active section, live reload, fuzzy file search, 5 themes.
 
 ### Neovim + LazyVim
 
 ```bash
 git clone https://github.com/LazyVim/starter ~/.config/nvim
 rm -rf ~/.config/nvim/.git
-# Добавь в ~/.config/nvim/init.vim: set relativenumber
-nvim  # Запусти и дай плагинам установиться
-:LazyHealth  # Проверь здоровье
+# Add to ~/.config/nvim/init.vim: set relativenumber
+nvim  # Start it and let the plugins install
+:LazyHealth  # Check the health
 ```
 
-### Ollama (опционально)
+### Ollama (optional)
 
 ```bash
 brew install ollama
@@ -329,23 +352,26 @@ ollama pull llama2:7b
 ollama pull mistral
 ```
 
-GUI (скриптом не ставятся, оба нужно устанавливать вручную):
-[mindMac](https://mindmac.app/) или [Msty](https://msty.app/)
+GUI clients (not installed by the script, both are manual):
+[mindMac](https://mindmac.app/) or [Msty](https://msty.app/)
 
 ---
 
-## Структура репозитория
+## Repository layout
 
 ```
 macos-dotfiles/
-├── .zshrc                    # Главный конфиг shell
-├── README.md                 # Этот файл
-├── docs/                     # 📚 Документация
-│   ├── SETUP.md
+├── .zshrc                    # Main shell config
+├── README.md                 # This file
+├── README.ru.md              # Overview (Russian)
+├── LICENSE                   # MIT
+├── docs/                     # 📚 Documentation
+│   ├── SETUP.md              # Installation (English)
+│   ├── SETUP.ru.md           # Installation (Russian)
 │   └── HOMEBREW_AUTOUPDATE.md
-├── shell/                    # 🐚 Shell конфиги
+├── shell/                    # 🐚 Shell configs
 │   └── sorokin.zsh-theme
-├── terminal/                 # 🖥️ Терминалы
+├── terminal/                 # 🖥️ Terminals
 │   ├── config (Ghostty)
 │   └── sorokin.terminal-theme.terminal
 ├── raycast/                  # 🚀 Raycast launcher
@@ -354,41 +380,41 @@ macos-dotfiles/
 ├── nvim/                     # 📝 Neovim
 │   ├── config/
 │   └── plugins/
-├── scripts/                  # 🔧 Скрипты
+├── scripts/                  # 🔧 Scripts
 │   ├── setup.sh
 │   ├── brew_upgrade_logged.sh
 │   ├── brew_upgrade_cron.sh
 │   └── com.user.homebrew-autoupdate.plist
-└── misc/                     # 🎹 Разное
+└── misc/                     # 🎹 Everything else
     └── kbd67mkiirgbv3.layout.json
 ```
 
 ---
 
-## После установки
+## After installing
 
 ```bash
-# Перезапусти терминал или
+# Restart the terminal, or
 source ~/.zshrc
 
-# Проверь установку
+# Check the install
 brew --version
 mise --version
 nvim --version
 git --version
 node --version
 
-# Проверь алиасы
+# Check the aliases
 alias | grep -E "(glg|gl|ter|tre)"
 
-# Проверь Neovim
+# Check Neovim
 nvim
 :LazyHealth
 ```
 
 ---
 
-## Полезные ссылки
+## Links
 
 - [Homebrew](https://brew.sh/)
 - [Oh My Zsh](https://ohmyz.sh/)
@@ -400,6 +426,9 @@ nvim
 
 ---
 
-## Лицензия
+## License
 
-Личная конфигурация. Используй на своё усмотрение.
+MIT - see [LICENSE](LICENSE).
+
+This is a personal configuration: take it apart and lift what is useful, but
+expect the defaults to be tuned for one specific machine and one person's taste.
