@@ -272,7 +272,7 @@ install_homebrew_packages() {
   # which .zshrc also adds.
   brew install mise thefuck gnupg git tlrc translate-shell neovim \
     zsh-autosuggestions zsh-syntax-highlighting fd fzf ripgrep \
-    lazygit lazysql curl yazi ast-grep bat btop ncdu gh glow \
+    lazygit lazysql ec gitlogue curl yazi ast-grep bat btop ncdu tokei gh glow \
     golangci-lint goreleaser unar pnpm
 
   # Install tools from custom tap
@@ -280,6 +280,12 @@ install_homebrew_packages() {
   # Trust the tap so it loads when HOMEBREW_REQUIRE_TAP_TRUST is set
   brew trust --tap sorokin-vladimir/tap
   brew install tele tele-beta
+
+  # weathr lives in its own tap, not in homebrew-core
+  brew tap veirt/veirt
+  # Trust the tap so it loads when HOMEBREW_REQUIRE_TAP_TRUST is set
+  brew trust --tap veirt/veirt
+  brew install weathr
 
   echo ""
   # Install Claude Code CLI (terminal-based AI coding assistant)

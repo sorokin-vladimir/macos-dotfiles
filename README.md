@@ -224,13 +224,18 @@ It then runs daily at 11:09 and notifies about:
 ```bash
 brew install mise thefuck gnupg git tlrc translate-shell neovim \
   zsh-autosuggestions zsh-syntax-highlighting fd fzf ripgrep \
-  lazygit lazysql curl yazi ast-grep bat btop ncdu gh glow \
+  lazygit lazysql ec gitlogue curl yazi ast-grep bat btop ncdu tokei gh glow \
   golangci-lint goreleaser unar pnpm
 
 # Custom tap
 brew tap sorokin-vladimir/tap
 brew trust --tap sorokin-vladimir/tap
 brew install tele tele-beta
+
+# weathr is not in homebrew-core
+brew tap veirt/veirt
+brew trust --tap veirt/veirt
+brew install weathr
 ```
 
 Two of these need a word of explanation:
@@ -263,6 +268,12 @@ brew install --cask discord transmission tunnelblick zoom
 this from the CLI):
 ```bash
 brew install --cask grandperspective
+```
+
+**Typing practice** (not installed by the script - install it when you want it):
+```bash
+# Turns the source of the current repository into typing challenges
+brew install gittype
 ```
 
 ### Claude Code CLI

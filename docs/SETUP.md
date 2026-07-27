@@ -47,11 +47,14 @@ the GUI application list is an arrow-key picker.
 - `ripgrep` - fast grep
 - `lazygit` - TUI for git
 - `lazysql` - TUI for databases
+- `ec` - TUI 3-way git mergetool for resolving conflicts
+- `gitlogue` - replays the commit history as a cinematic animation in the terminal
 - `yazi` - terminal file manager
 - `ast-grep` - code search and refactoring over the AST
 - `bat` - cat with syntax highlighting
 - `btop` - system resource monitor
 - `ncdu` - interactive disk usage analysis
+- `tokei` - counts lines of code by language
 - `curl` - keg-only in Homebrew, because macOS ships its own. `.zshrc` puts `/opt/homebrew/opt/curl/bin` first on PATH, otherwise the brew build goes unused. Differences from the system one: OpenSSL instead of LibreSSL, HTTP/3, brotli, zstd
 - `pnpm` - Node package manager (`.zshrc` sets up `PNPM_HOME`)
 - `gh` - GitHub CLI
@@ -61,6 +64,11 @@ the GUI application list is an arrow-key picker.
 - `unar` - archive extraction
 - `tele` (tap `sorokin-vladimir/tap`) - TUI Telegram client
 - `tele-beta` (tap `sorokin-vladimir/tap`) - the beta channel of `tele`, installed as a `tele-beta` binary so it can live next to the stable one
+- `weathr` (tap `veirt/veirt`) - terminal weather app with ASCII animations; not in homebrew-core, so the script taps and trusts `veirt/veirt` first
+
+**Not installed by the script (install by hand when you want it):**
+
+- `gittype` - typing game that turns the source of the current repository into typing challenges: `brew install gittype`
 
 **Claude Code CLI (asks first):**
 

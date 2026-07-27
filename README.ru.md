@@ -221,13 +221,18 @@ nvim/
 ```bash
 brew install mise thefuck gnupg git tlrc translate-shell neovim \
   zsh-autosuggestions zsh-syntax-highlighting fd fzf ripgrep \
-  lazygit lazysql curl yazi ast-grep bat btop ncdu gh glow \
+  lazygit lazysql ec gitlogue curl yazi ast-grep bat btop ncdu tokei gh glow \
   golangci-lint goreleaser unar pnpm
 
 # Custom tap
 brew tap sorokin-vladimir/tap
 brew trust --tap sorokin-vladimir/tap
 brew install tele tele-beta
+
+# weathr в homebrew-core нет
+brew tap veirt/veirt
+brew trust --tap veirt/veirt
+brew install weathr
 ```
 
 **GUI apps:**
@@ -250,6 +255,12 @@ brew install --cask discord transmission tunnelblick zoom
 **GUI-альтернатива для анализа диска** (не ставится скриптом, в наборе есть CLI - `ncdu`):
 ```bash
 brew install --cask grandperspective
+```
+
+**Тренажёр слепой печати** (не ставится скриптом - поставить, когда понадобится):
+```bash
+# Делает упражнения из исходников текущего репозитория
+brew install gittype
 ```
 
 ### Claude Code CLI

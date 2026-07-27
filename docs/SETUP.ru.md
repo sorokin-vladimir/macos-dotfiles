@@ -46,11 +46,14 @@ cd ~/Documents/macos-dotfiles
 - `ripgrep` - быстрый grep
 - `lazygit` - TUI для git
 - `lazysql` - TUI для баз данных
+- `ec` - TUI-мерджтул для разрешения конфликтов в git (3-way)
+- `gitlogue` - проигрывает историю коммитов как анимацию в терминале
 - `yazi` - файловый менеджер в терминале
 - `ast-grep` - поиск и рефакторинг кода по AST
 - `bat` - cat с подсветкой синтаксиса
 - `btop` - монитор ресурсов системы
 - `ncdu` - интерактивный анализ занятого места
+- `tokei` - подсчёт строк кода по языкам
 - `curl` - в Homebrew он keg-only, потому что свой curl есть в macOS. `.zshrc` добавляет `/opt/homebrew/opt/curl/bin` в начало PATH, иначе brew-версия не используется. Отличия от системной: OpenSSL вместо LibreSSL, HTTP/3, brotli, zstd
 - `pnpm` - пакетный менеджер Node (`.zshrc` настраивает `PNPM_HOME`)
 - `gh` - GitHub CLI
@@ -60,6 +63,11 @@ cd ~/Documents/macos-dotfiles
 - `unar` - распаковка архивов
 - `tele` (tap `sorokin-vladimir/tap`) - TUI-клиент Telegram
 - `tele-beta` (tap `sorokin-vladimir/tap`) - бета-канал `tele`, ставится как бинарь `tele-beta` (можно держать вместе со стабильным)
+- `weathr` (tap `veirt/veirt`) - погода в терминале с ASCII-анимациями; в homebrew-core его нет, поэтому скрипт сначала подключает и доверяет тапу `veirt/veirt`
+
+**Не ставится скриптом (поставить руками, когда понадобится):**
+
+- `gittype` - тренажёр слепой печати, делает упражнения из исходников текущего репозитория: `brew install gittype`
 
 **Claude Code CLI (спросит перед установкой):**
 
