@@ -52,6 +52,7 @@ the GUI application list is an arrow-key picker.
 - `yazi` - terminal file manager
 - `ast-grep` - code search and refactoring over the AST
 - `bat` - cat with syntax highlighting
+- `lla` - an `ls` replacement with several view modes (tree, timeline, git) and a plugin system
 - `btop` - system resource monitor
 - `ncdu` - interactive disk usage analysis
 - `tokei` - counts lines of code by language
