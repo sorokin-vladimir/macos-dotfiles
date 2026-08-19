@@ -236,6 +236,11 @@ brew install tele tele-beta
 brew tap veirt/veirt
 brew trust --tap veirt/veirt
 brew install weathr
+
+# lsoff is not in homebrew-core
+brew tap yutat23/tap
+brew trust --tap yutat23/tap
+brew install lsoff
 ```
 
 Two of these need a word of explanation:

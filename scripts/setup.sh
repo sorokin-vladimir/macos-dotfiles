@@ -287,6 +287,12 @@ install_homebrew_packages() {
   brew trust --tap veirt/veirt
   brew install weathr
 
+  # lsoff lives in its own tap, not in homebrew-core
+  brew tap yutat23/tap
+  # Trust the tap so it loads when HOMEBREW_REQUIRE_TAP_TRUST is set
+  brew trust --tap yutat23/tap
+  brew install lsoff
+
   echo ""
   # Install Claude Code CLI (terminal-based AI coding assistant)
   if ask_yes_no "Install Claude Code CLI (native install)?"; then

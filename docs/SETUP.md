@@ -66,6 +66,7 @@ the GUI application list is an arrow-key picker.
 - `tele` (tap `sorokin-vladimir/tap`) - TUI Telegram client
 - `tele-beta` (tap `sorokin-vladimir/tap`) - the beta channel of `tele`, installed as a `tele-beta` binary so it can live next to the stable one
 - `weathr` (tap `veirt/veirt`) - terminal weather app with ASCII animations; not in homebrew-core, so the script taps and trusts `veirt/veirt` first
+- `lsoff` (tap `yutat23/tap`) - CLI/TUI that shows which processes are listening on TCP/UDP ports and can kill the one holding a port; not in homebrew-core, so the script taps and trusts `yutat23/tap` first
 
 **Not installed by the script (install by hand when you want it):**
 
