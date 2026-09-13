@@ -273,24 +273,24 @@ install_homebrew_packages() {
   brew install mise thefuck gnupg git tlrc translate-shell neovim \
     zsh-autosuggestions zsh-syntax-highlighting fd fzf ripgrep \
     lazygit lazysql ec gitlogue curl yazi ast-grep bat btop ncdu tokei gh glow \
-    golangci-lint goreleaser unar pnpm lla
+    golangci-lint goreleaser unar pnpm lla tele
 
   # Install tools from custom tap
   brew tap sorokin-vladimir/tap
   # Trust the tap so it loads when HOMEBREW_REQUIRE_TAP_TRUST is set
-  brew trust --tap sorokin-vladimir/tap
-  brew install tele tele-beta
+  brew trust sorokin-vladimir/tap
+  brew install tele-beta
 
   # weathr lives in its own tap, not in homebrew-core
   brew tap veirt/veirt
   # Trust the tap so it loads when HOMEBREW_REQUIRE_TAP_TRUST is set
-  brew trust --tap veirt/veirt
+  brew trust veirt/veirt
   brew install weathr
 
   # lsoff lives in its own tap, not in homebrew-core
   brew tap yutat23/tap
   # Trust the tap so it loads when HOMEBREW_REQUIRE_TAP_TRUST is set
-  brew trust --tap yutat23/tap
+  brew trust yutat23/tap
   brew install lsoff
 
   echo ""
@@ -333,7 +333,7 @@ install_homebrew_packages() {
     *" claude-usage-tracker "*)
       brew tap hamed-elfayome/claude-usage
       # Trust the tap so it loads when HOMEBREW_REQUIRE_TAP_TRUST is set
-      brew trust --tap hamed-elfayome/claude-usage
+      brew trust hamed-elfayome/claude-usage
       ;;
     esac
     # Word splitting is intentional: $casks is a space-separated cask list
