@@ -508,7 +508,9 @@ setup_mise() {
     echo ""
     if ask_yes_no "Install global npm packages (leaf markdown viewer)?"; then
       print_info "Installing global npm packages..."
-      npm install -g @rivolink/leaf
+      # mise is activated only in .zshrc, so this bash process never gets
+      # node on PATH; mise exec runs npm from the version installed above
+      mise exec node@24 -- npm install -g @rivolink/leaf
       print_success "Global npm packages installed"
     fi
   fi
