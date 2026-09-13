@@ -8,6 +8,7 @@
 **Главный скрипт установки окружения**
 
 Автоматически устанавливает и настраивает:
+- Xcode Command Line Tools (если их нет)
 - Homebrew и все пакеты
 - Oh My Zsh с кастомной темой
 - Git конфигурацию
@@ -15,6 +16,7 @@
 - SSH ключи
 - mise runtime manager
 - Копирует все конфигурационные файлы
+- Раскладки ABC + Russian - PC, Cmd+Space для переключения языка, Spotlight выключен
 
 **Использование:**
 ```bash
@@ -29,6 +31,7 @@
 ./scripts/setup.sh --skip-apps
 ./scripts/setup.sh --skip-shell
 ./scripts/setup.sh --skip-git-completion
+./scripts/setup.sh --skip-macos
 
 # Только обновить конфиги (без установки пакетов)
 ./scripts/setup.sh --skip-homebrew --skip-apps --skip-shell --non-interactive

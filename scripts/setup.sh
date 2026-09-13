@@ -22,6 +22,7 @@ SKIP_HOMEBREW=0
 SKIP_APPS=0
 SKIP_SHELL=0
 SKIP_GIT_COMPLETION=0
+SKIP_MACOS=0
 INTERACTIVE=1
 
 # Git identity offered as the prompt default when nothing is configured yet
@@ -231,6 +232,27 @@ command_exists() {
 # Installation Functions
 # ==============================================================================
 
+install_xcode_clt() {
+  print_step "Checking Xcode Command Line Tools"
+
+  if xcode-select -p >/dev/null 2>&1; then
+    print_success "Command Line Tools already installed"
+    return
+  fi
+
+  # The Homebrew installer is supposed to handle this, but on a clean system
+  # it did not, so install explicitly before anything needs a compiler or git
+  print_info "Installing Command Line Tools, confirm the system dialog..."
+  xcode-select --install >/dev/null 2>&1 || true
+
+  # The installer runs as a separate GUI process; wait for it to finish
+  until xcode-select -p >/dev/null 2>&1; do
+    sleep 5
+  done
+
+  print_success "Command Line Tools installed"
+}
+
 install_homebrew() {
   if [ $SKIP_HOMEBREW -eq 1 ]; then
     print_info "Skipping Homebrew installation"
@@ -275,22 +297,24 @@ install_homebrew_packages() {
     lazygit lazysql ec gitlogue curl yazi ast-grep bat btop ncdu tokei gh glow \
     golangci-lint goreleaser unar pnpm lla tele
 
-  # Install tools from custom tap
+  # Since Homebrew 6 third-party taps must be trusted before anything loads
+  # them, and `brew tap` loads every formula right after cloning to validate
+  # the tap. Trusting afterwards is too late: the tap fails with
+  # "invalid syntax in tap!". So trust first, then tap.
+
+  # tele-beta lives in the custom tap (stable tele comes from homebrew-core)
+  brew trust --tap sorokin-vladimir/tap
   brew tap sorokin-vladimir/tap
-  # Trust the tap so it loads when HOMEBREW_REQUIRE_TAP_TRUST is set
-  brew trust sorokin-vladimir/tap
   brew install tele-beta
 
   # weathr lives in its own tap, not in homebrew-core
+  brew trust --tap veirt/veirt
   brew tap veirt/veirt
-  # Trust the tap so it loads when HOMEBREW_REQUIRE_TAP_TRUST is set
-  brew trust veirt/veirt
   brew install weathr
 
   # lsoff lives in its own tap, not in homebrew-core
+  brew trust --tap yutat23/tap
   brew tap yutat23/tap
-  # Trust the tap so it loads when HOMEBREW_REQUIRE_TAP_TRUST is set
-  brew trust yutat23/tap
   brew install lsoff
 
   echo ""
@@ -331,9 +355,9 @@ install_homebrew_packages() {
     # The tracker lives in a third-party tap; only tap when it was picked
     case " $casks " in
     *" claude-usage-tracker "*)
+      # Trust before tapping, see the note above the formula taps
+      brew trust --tap hamed-elfayome/claude-usage
       brew tap hamed-elfayome/claude-usage
-      # Trust the tap so it loads when HOMEBREW_REQUIRE_TAP_TRUST is set
-      brew trust hamed-elfayome/claude-usage
       ;;
     esac
     # Word splitting is intentional: $casks is a space-separated cask list
@@ -527,6 +551,56 @@ setup_ssh() {
   echo "  pbcopy < ~/.ssh/id_ed25519.pub   # then add it at github.com/settings/keys"
 }
 
+# Builds a plist dict for a symbolic hotkey: key code, virtual key, modifiers
+hotkey_plist() {
+  local enabled="$1" char="$2" keycode="$3" modifiers="$4"
+  printf '<dict><key>enabled</key><%s/><key>value</key><dict>' "$enabled"
+  printf '<key>type</key><string>standard</string><key>parameters</key><array>'
+  printf '<integer>%s</integer><integer>%s</integer><integer>%s</integer>' "$char" "$keycode" "$modifiers"
+  printf '</array></dict></dict>'
+}
+
+setup_macos_keyboard() {
+  if [ $SKIP_MACOS -eq 1 ]; then
+    print_info "Skipping macOS keyboard settings"
+    return
+  fi
+
+  print_step "Configuring keyboard layouts and shortcuts"
+
+  if ! ask_yes_no "Set ABC + Russian - PC layouts and Cmd+Space for switching (Spotlight off)?"; then
+    return
+  fi
+
+  # Russian - PC (RussianWin) keeps comma and period on the key next to right
+  # Shift, instead of Shift+6 / Shift+7 as in the Mac Russian layout
+  print_info "Setting input sources: ABC, Russian - PC..."
+  defaults write com.apple.HIToolbox AppleEnabledInputSources -array \
+    '<dict><key>InputSourceKind</key><string>Keyboard Layout</string><key>KeyboardLayout ID</key><integer>252</integer><key>KeyboardLayout Name</key><string>ABC</string></dict>' \
+    '<dict><key>InputSourceKind</key><string>Keyboard Layout</string><key>KeyboardLayout ID</key><integer>19458</integer><key>KeyboardLayout Name</key><string>RussianWin</string></dict>' \
+    '<dict><key>Bundle ID</key><string>com.apple.CharacterPaletteIM</string><key>InputSourceKind</key><string>Non Keyboard Input Method</string></dict>' \
+    '<dict><key>Bundle ID</key><string>com.apple.PressAndHold</string><key>InputSourceKind</key><string>Non Keyboard Input Method</string></dict>'
+
+  # Symbolic hotkey IDs: 60 previous input source, 61 next input source,
+  # 64 Spotlight search, 65 Finder search window.
+  # Space is char 32 / key code 49. Modifiers: Cmd 1048576, Ctrl+Opt 786432,
+  # Ctrl 262144, Cmd+Opt 1572864.
+  # Spotlight goes off so Cmd+Space can switch layouts and Raycast can take
+  # Ctrl+Space.
+  print_info "Setting shortcuts: Cmd+Space switches layouts, Spotlight disabled..."
+  defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add \
+    60 "$(hotkey_plist true 32 49 1048576)" \
+    61 "$(hotkey_plist true 32 49 786432)" \
+    64 "$(hotkey_plist false 32 49 262144)" \
+    65 "$(hotkey_plist false 32 49 1572864)"
+
+  # Apply shortcut changes without logging out
+  /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u 2>/dev/null || true
+
+  print_success "Keyboard configured"
+  print_warning "Input source changes fully apply after logging out and back in"
+}
+
 # ==============================================================================
 # Main Setup Flow
 # ==============================================================================
@@ -558,6 +632,7 @@ main() {
   fi
 
   # Run installation steps
+  install_xcode_clt
   install_homebrew
   install_homebrew_packages
   install_ohmyzsh
@@ -566,6 +641,7 @@ main() {
   install_git_completion
   setup_mise
   setup_ssh
+  setup_macos_keyboard
 
   # Final steps
   print_step "Setup Complete!"
@@ -579,11 +655,11 @@ main() {
   echo "  4. If installed Claude Code CLI, authenticate: claude auth login"
   echo ""
   print_warning "Raycast setup (if installed):"
-  echo "  1. Open System Settings > Siri & Spotlight"
-  echo "  2. Disable Spotlight keyboard shortcut"
-  echo "  3. Open Raycast and set Ctrl+Space as hotkey"
-  echo "  4. Sign in to Raycast account for sync"
-  echo "  5. Install extensions: Spotify Player, Google Translate"
+  echo "  1. Spotlight shortcut is disabled by the keyboard step (if you skipped it,"
+  echo "     turn it off in System Settings > Keyboard > Keyboard Shortcuts)"
+  echo "  2. Open Raycast and set Ctrl+Space as hotkey"
+  echo "  3. Sign in to Raycast account for sync"
+  echo "  4. Install extensions: Spotify Player, Google Translate"
   echo "  See raycast/README.md for detailed instructions"
   echo ""
   print_info "Additional manual steps (optional):"
@@ -617,6 +693,10 @@ while [[ $# -gt 0 ]]; do
     SKIP_GIT_COMPLETION=1
     shift
     ;;
+  --skip-macos)
+    SKIP_MACOS=1
+    shift
+    ;;
   --non-interactive)
     INTERACTIVE=0
     shift
@@ -629,6 +709,7 @@ while [[ $# -gt 0 ]]; do
     echo "  --skip-apps              Skip application installation"
     echo "  --skip-shell             Skip shell setup (Oh My Zsh)"
     echo "  --skip-git-completion    Skip Git completion setup"
+    echo "  --skip-macos             Skip keyboard layouts and shortcuts"
     echo "  --non-interactive        Run without prompts (use defaults)"
     echo "  -h, --help               Show this help message"
     exit 0
