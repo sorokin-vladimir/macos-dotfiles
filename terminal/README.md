@@ -8,14 +8,15 @@
 
 - **config** - Конфигурация Ghostty terminal emulator
   - **Тема:** TokyoNight Moon (dark) / TokyoNight Day (light)
-  - **Шрифт:** Monaspace Neon Var Regular Light
+  - **Шрифт:** MonaspiceNe Nerd Font Mono, начертание Light
   - **Vim-style навигация:** `cmd+shift+h/j/k/l` для переключения между сплитами
   - **Quick terminal:** `cmd+g` (глобальный hotkey)
   - **Другие hotkeys:**
     - `cmd+s` - новый split вниз
     - `cmd+i` - inspector
     - `cmd+r` - перезагрузка конфига
-  - Window padding: 10px
+    - `shift+enter` - шлёт ESC+Enter (перенос строки без отправки, например в Claude Code)
+  - Window padding: 4px
   - Анимации включены
 
 ### Legacy (устаревшее)
@@ -49,12 +50,17 @@ cp terminal/config ~/Library/Application\ Support/com.mitchellh.ghostty/config
 
 ## Шрифты
 
-⚠️ Требуется установка **Monaspace Neon Var**:
+⚠️ Требуется **MonaspiceNe Nerd Font Mono** (`setup.sh` ставит его сам):
 
 ```bash
-# Через Homebrew
-brew install --cask font-monaspace
+brew install --cask font-monaspice-nerd-font
+```
 
-# Или скачай с GitHub
-# https://github.com/githubnext/monaspace
+Толщина задаётся отдельной строкой `font-style = Light`. Если написать её в
+`font-family` (`"MonaspiceNe Nerd Font Mono Light"`), такого семейства нет, и
+Ghostty молча откатится на встроенный JetBrains Mono. Проверить, какой шрифт
+реально используется:
+
+```bash
+ghostty +show-face --cp=0x61 --font-family="MonaspiceNe Nerd Font Mono" --font-style=Light
 ```

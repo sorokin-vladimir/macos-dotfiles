@@ -80,7 +80,7 @@ cd ~/Documents/macos-dotfiles
 
 ### Ghostty (основной)
 - TokyoNight тема (Moon/Day)
-- Шрифт: MonaspiceNe Nerd Font Mono Light
+- Шрифт: MonaspiceNe Nerd Font Mono, Light
 - Vim-style навигация: `cmd+shift+hjkl`
 - Quick terminal: `cmd+g`
 
@@ -115,7 +115,7 @@ cd ~/Documents/macos-dotfiles
 ```
 
 Затем:
-1. Отключить Spotlight в System Settings
+1. Хоткей Spotlight уже выключает `setup.sh` (шаг с клавиатурой); если шаг пропущен - отключить в System Settings
 2. Проверить хоткей `Ctrl+Space` в Raycast (должен восстановиться автоматически)
 
 📖 Подробнее: **[raycast/README.md](raycast/README.md)** (на русском)
@@ -133,11 +133,14 @@ nvim/
 ├── config/           # Кейбинды и опции
 │   ├── keymaps.lua
 │   └── options.lua
-└── plugins/          # Настройки плагинов
-    ├── cmp.lua
-    ├── codeium.lua
-    ├── colorscheme.lua
-    └── surround.lua
+├── plugins/          # Настройки плагинов
+│   ├── cmp.lua
+│   ├── codeium.lua
+│   ├── colorscheme.lua
+│   ├── lint.lua
+│   ├── surround.lua
+│   └── which-key.lua
+└── lazyvim.json      # Включённые LazyVim extras
 ```
 
 **Основные кейбинды:**
@@ -161,6 +164,7 @@ nvim/
 ./scripts/setup.sh                    # Полная установка
 ./scripts/setup.sh --non-interactive  # Без вопросов, берёт дефолты
 ./scripts/setup.sh --skip-apps        # Пропустить приложения
+./scripts/setup.sh --skip-macos       # Пропустить раскладки и хоткеи
 ```
 
 Вопросы задаются одной клавишей, а список GUI-приложений выбирается стрелками:
@@ -209,6 +213,12 @@ nvim/
 
 ## Установка компонентов
 
+### Xcode Command Line Tools
+
+```bash
+xcode-select --install
+```
+
 ### Homebrew
 
 ```bash
@@ -222,29 +232,30 @@ nvim/
 brew install mise thefuck gnupg git tlrc translate-shell neovim \
   zsh-autosuggestions zsh-syntax-highlighting fd fzf ripgrep \
   lazygit lazysql ec gitlogue curl yazi ast-grep bat btop ncdu tokei gh glow \
-  golangci-lint goreleaser unar pnpm lla
+  golangci-lint goreleaser unar pnpm lla tele
 
-# Custom tap
-brew tap sorokin-vladimir/tap
+# Сторонние тапы: сначала trust, потом tap. С Homebrew 6 `brew tap` загружает
+# все формулы для проверки тапа и падает на недоверенных
 brew trust --tap sorokin-vladimir/tap
-brew install tele tele-beta
+brew tap sorokin-vladimir/tap
+brew install tele-beta
 
 # weathr в homebrew-core нет
-brew tap veirt/veirt
 brew trust --tap veirt/veirt
+brew tap veirt/veirt
 brew install weathr
 
 # lsoff в homebrew-core нет
-brew tap yutat23/tap
 brew trust --tap yutat23/tap
+brew tap yutat23/tap
 brew install lsoff
 ```
 
 **GUI apps:**
 ```bash
 # Tap for Claude Usage Tracker
-brew tap hamed-elfayome/claude-usage
 brew trust --tap hamed-elfayome/claude-usage
+brew tap hamed-elfayome/claude-usage
 brew install --cask anki claude firefox \
   zen hey-desktop keepassxc logseq simplenote spotify \
   telegram vlc ghostty raycast \
@@ -289,7 +300,8 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/too
 
 ```bash
 # Nerd-патченый Monaspace. Ghostty настроен именно на него:
-# font-family = "MonaspiceNe Nerd Font Mono Light"
+# font-family = "MonaspiceNe Nerd Font Mono"
+# font-style = Light
 brew install --cask font-monaspice-nerd-font
 ```
 
@@ -326,6 +338,15 @@ mise use -g aqua:sqlc-dev/sqlc
 mise use -g aqua:golang-migrate/migrate
 ```
 
+### Раскладки и хоткеи
+
+`setup.sh` делает это на шаге с клавиатурой. Вручную, в System Settings > Keyboard:
+
+- Input Sources: ABC и Russian - PC (запятая и точка на клавише у правого
+  Shift, а не на Shift+6 / Shift+7)
+- Keyboard Shortcuts > Input Sources: предыдущий источник ввода на `Cmd+Space`
+- Keyboard Shortcuts > Spotlight: выключить, чтобы `Ctrl+Space` достался Raycast
+
 ### npm Global Packages
 
 ```bash
@@ -335,6 +356,8 @@ npm install -g @rivolink/leaf   # Terminal Markdown viewer
 **leaf** — просмотрщик Markdown в терминале: подсветка синтаксиса, рендеринг LaTeX, TOC с активной секцией, live reload, fuzzy-поиск файлов, 5 тем.
 
 ### Neovim + LazyVim
+
+`setup.sh` ставит starter сам, если нет `~/.config/nvim/init.lua`. Вручную:
 
 ```bash
 git clone https://github.com/LazyVim/starter ~/.config/nvim

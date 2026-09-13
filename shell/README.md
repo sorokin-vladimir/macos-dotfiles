@@ -92,7 +92,7 @@ echo -e "\ue0a0 \uf09b \uf07c \uf017"
 
 ```bash
 # Через Homebrew (рекомендуется)
-brew install --cask font-monaspace-nerd-font
+brew install --cask font-monaspice-nerd-font
 
 # Или поиск других Nerd Fonts
 brew search nerd-font
@@ -113,7 +113,7 @@ brew search nerd-font
 1. Перезапусти терминал
 2. Установи Nerd Font в настройках терминала:
    - Для **Ghostty**: отредактируй `~/Library/Application Support/com.mitchellh.ghostty/config`
-   - Установи: `font-family = "MonaspiceNe Nerd Font Mono Light"` (или другой Nerd Font)
+   - Установи: `font-family = "MonaspiceNe Nerd Font Mono"` и `font-style = Light` (или другой Nerd Font)
    - Перезагрузи Ghostty: `cmd+r` или перезапусти приложение
 
 ### Шаг 3: Установи тему
@@ -289,7 +289,7 @@ PROMPT="${electric_cyan}\uf07c %2~${reset}"
    ```bash
    grep "font-family" ~/Library/Application\ Support/com.mitchellh.ghostty/config
    ```
-   Должно быть что-то вроде: `font-family = "MonaspiceNe Nerd Font Mono Light"`
+   Должно быть что-то вроде: `font-family = "MonaspiceNe Nerd Font Mono"` (толщина - отдельной строкой `font-style = Light`)
 
 3. Проверь, что иконки в теме записаны правильно (через `$'\uXXXX'`, а не `\uXXXX`)
 

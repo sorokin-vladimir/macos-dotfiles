@@ -83,7 +83,7 @@ checks SSH, and copies the config files into place.
 
 ### Ghostty (primary)
 - TokyoNight theme (Moon/Day)
-- Font: MonaspiceNe Nerd Font Mono Light
+- Font: MonaspiceNe Nerd Font Mono, Light
 - Vim-style navigation: `cmd+shift+hjkl`
 - Quick terminal: `cmd+g`
 
@@ -118,7 +118,7 @@ A Spotlight replacement:
 ```
 
 Then:
-1. Disable Spotlight in System Settings
+1. `setup.sh` already disables the Spotlight shortcut (keyboard step); if you skipped that step, disable it in System Settings
 2. Confirm the `Ctrl+Space` hotkey in Raycast (it should restore automatically)
 
 📖 More: **[raycast/README.md](raycast/README.md)** (in Russian)
@@ -136,11 +136,14 @@ nvim/
 ├── config/           # Keymaps and options
 │   ├── keymaps.lua
 │   └── options.lua
-└── plugins/          # Plugin configuration
-    ├── cmp.lua
-    ├── codeium.lua
-    ├── colorscheme.lua
-    └── surround.lua
+├── plugins/          # Plugin configuration
+│   ├── cmp.lua
+│   ├── codeium.lua
+│   ├── colorscheme.lua
+│   ├── lint.lua
+│   ├── surround.lua
+│   └── which-key.lua
+└── lazyvim.json      # Enabled LazyVim extras
 ```
 
 **Key bindings:**
@@ -164,6 +167,7 @@ The main environment bootstrap script.
 ./scripts/setup.sh                    # Full install
 ./scripts/setup.sh --non-interactive  # No prompts, takes the defaults
 ./scripts/setup.sh --skip-apps        # Skip applications
+./scripts/setup.sh --skip-macos       # Skip keyboard layouts and shortcuts
 ```
 
 Prompts take a single keypress, and the GUI application list is an arrow-key
@@ -212,6 +216,12 @@ It then runs daily at 11:09 and notifies about:
 
 ## Installing the pieces by hand
 
+### Xcode Command Line Tools
+
+```bash
+xcode-select --install
+```
+
 ### Homebrew
 
 ```bash
@@ -225,21 +235,22 @@ It then runs daily at 11:09 and notifies about:
 brew install mise thefuck gnupg git tlrc translate-shell neovim \
   zsh-autosuggestions zsh-syntax-highlighting fd fzf ripgrep \
   lazygit lazysql ec gitlogue curl yazi ast-grep bat btop ncdu tokei gh glow \
-  golangci-lint goreleaser unar pnpm lla
+  golangci-lint goreleaser unar pnpm lla tele
 
-# Custom tap
-brew tap sorokin-vladimir/tap
+# Third-party taps: trust first, then tap. Since Homebrew 6 `brew tap` loads
+# every formula to validate the tap and fails on untrusted ones
 brew trust --tap sorokin-vladimir/tap
-brew install tele tele-beta
+brew tap sorokin-vladimir/tap
+brew install tele-beta
 
 # weathr is not in homebrew-core
-brew tap veirt/veirt
 brew trust --tap veirt/veirt
+brew tap veirt/veirt
 brew install weathr
 
 # lsoff is not in homebrew-core
-brew tap yutat23/tap
 brew trust --tap yutat23/tap
+brew tap yutat23/tap
 brew install lsoff
 ```
 
@@ -255,8 +266,8 @@ Two of these need a word of explanation:
 **GUI apps:**
 ```bash
 # Tap for Claude Usage Tracker
-brew tap hamed-elfayome/claude-usage
 brew trust --tap hamed-elfayome/claude-usage
+brew tap hamed-elfayome/claude-usage
 brew install --cask anki claude firefox \
   zen hey-desktop keepassxc logseq simplenote spotify \
   telegram vlc ghostty raycast \
@@ -302,7 +313,8 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/too
 
 ```bash
 # Nerd-patched Monaspace. This is what Ghostty is configured for:
-# font-family = "MonaspiceNe Nerd Font Mono Light"
+# font-family = "MonaspiceNe Nerd Font Mono"
+# font-style = Light
 brew install --cask font-monaspice-nerd-font
 ```
 
@@ -339,6 +351,15 @@ mise use -g aqua:sqlc-dev/sqlc
 mise use -g aqua:golang-migrate/migrate
 ```
 
+### Keyboard layouts and shortcuts
+
+`setup.sh` does this in its keyboard step. By hand, in System Settings > Keyboard:
+
+- Input Sources: ABC and Russian - PC (comma and period sit next to the right
+  Shift, not on Shift+6 / Shift+7)
+- Keyboard Shortcuts > Input Sources: previous input source on `Cmd+Space`
+- Keyboard Shortcuts > Spotlight: turn off, so Raycast can take `Ctrl+Space`
+
 ### npm global packages
 
 ```bash
@@ -349,6 +370,9 @@ npm install -g @rivolink/leaf   # Terminal Markdown viewer
 that tracks the active section, live reload, fuzzy file search, 5 themes.
 
 ### Neovim + LazyVim
+
+`setup.sh` installs the starter itself when `~/.config/nvim/init.lua` is
+missing. By hand:
 
 ```bash
 git clone https://github.com/LazyVim/starter ~/.config/nvim

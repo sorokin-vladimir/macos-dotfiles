@@ -74,6 +74,8 @@ nvim/
 
 ### 1. Установи LazyVim
 
+`setup.sh` делает это сам, если в `~/.config/nvim` ещё нет `init.lua`. Вручную:
+
 ```bash
 # Клонировать LazyVim starter
 git clone https://github.com/LazyVim/starter ~/.config/nvim
@@ -112,4 +114,4 @@ nvim
 
 - Neovim >= 0.9.0
 - Установлен через Homebrew: `brew install neovim`
-- Шрифт Monaspace Neon Var (для корректного отображения иконок)
+- Шрифт MonaspiceNe Nerd Font Mono (для корректного отображения иконок)

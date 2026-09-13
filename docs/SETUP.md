@@ -23,8 +23,9 @@ the GUI application list is an arrow-key picker.
 
 ## What the script does
 
-### 1. Install Homebrew
+### 1. Install Xcode Command Line Tools and Homebrew
 
+- Installs the Xcode Command Line Tools if `xcode-select -p` finds none, and waits for the system dialog to finish
 - Checks whether Homebrew is already there
 - Installs it if not
 - Sets up PATH for Apple Silicon
@@ -63,10 +64,14 @@ the GUI application list is an arrow-key picker.
 - `golangci-lint` - Go linter
 - `goreleaser` - building and publishing Go releases
 - `unar` - archive extraction
-- `tele` (tap `sorokin-vladimir/tap`) - TUI Telegram client
+- `tele` - TUI Telegram client (homebrew-core)
 - `tele-beta` (tap `sorokin-vladimir/tap`) - the beta channel of `tele`, installed as a `tele-beta` binary so it can live next to the stable one
-- `weathr` (tap `veirt/veirt`) - terminal weather app with ASCII animations; not in homebrew-core, so the script taps and trusts `veirt/veirt` first
-- `lsoff` (tap `yutat23/tap`) - CLI/TUI that shows which processes are listening on TCP/UDP ports and can kill the one holding a port; not in homebrew-core, so the script taps and trusts `yutat23/tap` first
+- `weathr` (tap `veirt/veirt`) - terminal weather app with ASCII animations; not in homebrew-core, so the script trusts `veirt/veirt` and then taps it
+- `lsoff` (tap `yutat23/tap`) - CLI/TUI that shows which processes are listening on TCP/UDP ports and can kill the one holding a port; not in homebrew-core, so the script trusts `yutat23/tap` and then taps it
+
+Third-party taps are trusted before `brew tap`, not after. Since Homebrew 6
+`brew tap` loads every formula of the tap to validate it, refuses the untrusted
+ones and fails with `invalid syntax in tap!`.
 
 **Not installed by the script (install by hand when you want it):**
 
@@ -128,9 +133,10 @@ Not selected by default (rarely used):
 
 **Neovim (asks first):**
 
-- `config_keymaps.lua` → `~/.config/nvim/lua/config/keymaps.lua`
-- `config_options.lua` → `~/.config/nvim/lua/config/options.lua`
-- `plugins_*.lua` → `~/.config/nvim/lua/plugins/*.lua` (the `plugins_` prefix is dropped)
+- If `~/.config/nvim/init.lua` is missing, installs the [LazyVim starter](https://github.com/LazyVim/starter) first. The repo only holds overrides; `init.lua` and `lua/config/lazy.lua`, which load LazyVim, come from the starter
+- `nvim/config/*.lua` → `~/.config/nvim/lua/config/`
+- `nvim/plugins/*.lua` → `~/.config/nvim/lua/plugins/`
+- `nvim/lazyvim.json` → `~/.config/nvim/lazyvim.json`
 
 ### 5. Configure Git
 
@@ -150,6 +156,8 @@ Not selected by default (rarely used):
 
 - Offers to install Node.js 24 through mise
   - Command: `mise use -g node@24`
+- Offers to install global npm packages (`leaf`)
+  - Command: `mise exec node@24 -- npm install -g @rivolink/leaf`. mise is activated only in `.zshrc`, so the script's bash has no `npm` on PATH
 - Offers to install Go through mise
   - Command: `mise use -g go@latest`
 - Offers to install Go tooling (aqua backend)
@@ -163,6 +171,13 @@ Not selected by default (rarely used):
   requires a working key, so this branch is unreachable in the documented flow.
   `ssh-keygen` is interactive anyway, and the public key still has to be
   registered with GitHub by hand
+
+### 9. Keyboard layouts and shortcuts (asks first)
+
+- Input sources: ABC and Russian - PC. The PC layout keeps comma and period next to the right Shift rather than on Shift+6 / Shift+7
+- `Cmd+Space` switches to the previous input source, `Ctrl+Opt+Space` to the next one
+- Spotlight shortcuts are turned off, which frees `Ctrl+Space` for Raycast
+- Shortcuts apply right away; input sources fully apply after logging out and back in
 
 ## Command line options
 
@@ -181,6 +196,9 @@ Not selected by default (rarely used):
 
 # Skip installing Git completion
 ./scripts/setup.sh --skip-git-completion
+
+# Skip keyboard layouts and shortcuts
+./scripts/setup.sh --skip-macos
 
 # Non-interactive: take the default of every question
 ./scripts/setup.sh --non-interactive
@@ -210,7 +228,10 @@ licensing - `Monaspace` is a Reserved Font Name under the SIL OFL, so Nerd Fonts
 may not ship a patched build under that name. Plain `font-monaspace` from
 [github.com/githubnext/monaspace](https://github.com/githubnext/monaspace) is a
 different cask with no glyphs, and the zsh theme will break with it. Ghostty is
-configured for `font-family = "MonaspiceNe Nerd Font Mono Light"`.
+configured for `font-family = "MonaspiceNe Nerd Font Mono"` with
+`font-style = Light`. The weight has to be a separate `font-style`: a name like
+`MonaspiceNe Nerd Font Mono Light` is not a family, and Ghostty silently falls
+back to its built-in JetBrains Mono.
 
 Verify the icons render: `./shell/check-nerd-fonts.sh`
 

@@ -22,8 +22,9 @@ cd ~/Documents/macos-dotfiles
 
 ## Что делает скрипт автоматически
 
-### 1. Установка Homebrew
+### 1. Установка Xcode Command Line Tools и Homebrew
 
+- Ставит Xcode Command Line Tools, если `xcode-select -p` их не находит, и ждёт, пока закончится системный диалог
 - Проверяет, стоит ли уже Homebrew
 - Если нет - ставит
 - Настраивает PATH для Apple Silicon
@@ -62,10 +63,14 @@ cd ~/Documents/macos-dotfiles
 - `golangci-lint` - линтер для Go
 - `goreleaser` - сборка и публикация релизов Go
 - `unar` - распаковка архивов
-- `tele` (tap `sorokin-vladimir/tap`) - TUI-клиент Telegram
+- `tele` - TUI-клиент Telegram (homebrew-core)
 - `tele-beta` (tap `sorokin-vladimir/tap`) - бета-канал `tele`, ставится как бинарь `tele-beta` (можно держать вместе со стабильным)
-- `weathr` (tap `veirt/veirt`) - погода в терминале с ASCII-анимациями; в homebrew-core его нет, поэтому скрипт сначала подключает и доверяет тапу `veirt/veirt`
-- `lsoff` (tap `yutat23/tap`) - CLI/TUI, показывает, какие процессы слушают TCP/UDP-порты, и умеет прибить тот, что занял порт; в homebrew-core его нет, поэтому скрипт сначала подключает и доверяет тапу `yutat23/tap`
+- `weathr` (tap `veirt/veirt`) - погода в терминале с ASCII-анимациями; в homebrew-core его нет, поэтому скрипт сначала доверяет тапу `veirt/veirt`, потом подключает его
+- `lsoff` (tap `yutat23/tap`) - CLI/TUI, показывает, какие процессы слушают TCP/UDP-порты, и умеет прибить тот, что занял порт; в homebrew-core его нет, поэтому скрипт сначала доверяет тапу `yutat23/tap`, потом подключает его
+
+Сторонним тапам скрипт доверяет до `brew tap`, а не после. С Homebrew 6
+`brew tap` загружает все формулы тапа для проверки, отказывается грузить
+недоверенные и падает с `invalid syntax in tap!`.
 
 **Не ставится скриптом (поставить руками, когда понадобится):**
 
@@ -127,9 +132,10 @@ cd ~/Documents/macos-dotfiles
 
 **Neovim (спросит перед копированием):**
 
-- `config_keymaps.lua` → `~/.config/nvim/lua/config/keymaps.lua`
-- `config_options.lua` → `~/.config/nvim/lua/config/options.lua`
-- `plugins_*.lua` → `~/.config/nvim/lua/plugins/*.lua` (префикс `plugins_` убирается)
+- Если нет `~/.config/nvim/init.lua`, сначала ставит [LazyVim starter](https://github.com/LazyVim/starter). В репе лежат только доработки, а `init.lua` и `lua/config/lazy.lua`, которые загружают LazyVim, берутся из starter
+- `nvim/config/*.lua` → `~/.config/nvim/lua/config/`
+- `nvim/plugins/*.lua` → `~/.config/nvim/lua/plugins/`
+- `nvim/lazyvim.json` → `~/.config/nvim/lazyvim.json`
 
 ### 5. Настройка Git
 
@@ -149,6 +155,8 @@ cd ~/Documents/macos-dotfiles
 
 - Предлагает поставить Node.js 24 через mise
   - Команда: `mise use -g node@24`
+- Предлагает поставить глобальные npm-пакеты (`leaf`)
+  - Команда: `mise exec node@24 -- npm install -g @rivolink/leaf`. mise активируется только в `.zshrc`, поэтому в bash-процессе скрипта `npm` в PATH нет
 - Предлагает поставить Go через mise
   - Команда: `mise use -g go@latest`
 - Предлагает поставить Go-инструменты (aqua backend)
@@ -162,6 +170,13 @@ cd ~/Documents/macos-dotfiles
   рабочий ключ уже нужен, так что до скрипта дело всё равно не доходит.
   Да и `ssh-keygen` интерактивен, а публичный ключ всё равно добавлять
   в GitHub руками
+
+### 9. Раскладки и хоткеи (спросит перед настройкой)
+
+- Источники ввода: ABC и Russian - PC. В PC-раскладке запятая и точка на клавише у правого Shift, а не на Shift+6 / Shift+7
+- `Cmd+Space` переключает на предыдущий источник ввода, `Ctrl+Opt+Space` - на следующий
+- Хоткеи Spotlight выключаются, `Ctrl+Space` освобождается для Raycast
+- Хоткеи применяются сразу, раскладки - полностью после перелогина
 
 ## Опции командной строки
 
@@ -180,6 +195,9 @@ cd ~/Documents/macos-dotfiles
 
 # Пропустить установку Git completion
 ./scripts/setup.sh --skip-git-completion
+
+# Пропустить настройку раскладок и хоткеев
+./scripts/setup.sh --skip-macos
 
 # Неинтерактивный режим: берёт дефолт каждого вопроса
 ./scripts/setup.sh --non-interactive
@@ -209,7 +227,9 @@ brew install --cask font-monaspice-nerd-font
 Nerd Fonts не имеет права выпустить патченую версию под тем же именем. Обычный
 `font-monaspace` с [github.com/githubnext/monaspace](https://github.com/githubnext/monaspace) -
 это другой каск, без иконок, и zsh-тема с ним поедет. Ghostty настроен на
-`font-family = "MonaspiceNe Nerd Font Mono Light"`.
+`font-family = "MonaspiceNe Nerd Font Mono"` с `font-style = Light`. Толщина
+задаётся именно отдельным `font-style`: `MonaspiceNe Nerd Font Mono Light` - не
+имя семейства, и Ghostty молча откатится на встроенный JetBrains Mono.
 
 Проверить, что иконки видны: `./shell/check-nerd-fonts.sh`
 

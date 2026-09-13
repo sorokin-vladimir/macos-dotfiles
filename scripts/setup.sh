@@ -332,7 +332,7 @@ install_homebrew_packages() {
     print_info "Installing Nerd Fonts..."
     brew install --cask font-monaspice-nerd-font
     print_success "Monaspace Nerd Font installed"
-    print_info "You'll need to set it in Ghostty config: font-family = \"MonaspiceNe Nerd Font Mono Light\""
+    print_info "Ghostty config uses it: font-family = \"MonaspiceNe Nerd Font Mono\", font-style = Light"
   fi
 
   echo ""
@@ -418,6 +418,21 @@ copy_config_files() {
 
   # Copy Neovim configs (from nvim/config/ and nvim/plugins/)
   if ask_yes_no "Copy Neovim configuration files?"; then
+    # The repo only holds overrides; init.lua and lua/config/lazy.lua, which
+    # bootstrap lazy.nvim and LazyVim, come from the starter
+    if [ ! -f "$HOME/.config/nvim/init.lua" ]; then
+      print_info "Installing LazyVim starter..."
+      local starter
+      starter="$(mktemp -d)"
+      git clone -q --depth 1 https://github.com/LazyVim/starter "$starter"
+      rm -rf "$starter/.git"
+      mkdir -p "$HOME/.config/nvim"
+      # --ignore-existing keeps files an earlier partial run already copied.
+      # Not cp -n: newer macOS makes it exit 1 on skipped files, tripping set -e
+      rsync -a --ignore-existing "$starter/" "$HOME/.config/nvim/"
+      rm -rf "$starter"
+    fi
+
     print_info "Copying Neovim configs..."
     mkdir -p "$HOME/.config/nvim/lua/config"
     cp "$repo_root/nvim/config/"*.lua "$HOME/.config/nvim/lua/config/"
