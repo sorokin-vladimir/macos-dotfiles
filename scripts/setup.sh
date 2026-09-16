@@ -295,7 +295,7 @@ install_homebrew_packages() {
   brew install mise thefuck gnupg git tlrc translate-shell neovim \
     zsh-autosuggestions zsh-syntax-highlighting fd fzf ripgrep \
     lazygit lazysql ec gitlogue curl yazi ast-grep bat btop ncdu tokei gh glow \
-    golangci-lint goreleaser unar pnpm lla tele
+    golangci-lint goreleaser actionlint unar pnpm lla tele
 
   # Since Homebrew 6 third-party taps must be trusted before anything loads
   # them, and `brew tap` loads every formula right after cloning to validate

@@ -63,6 +63,7 @@ the GUI application list is an arrow-key picker.
 - `glow` - Markdown rendering in the terminal
 - `golangci-lint` - Go linter
 - `goreleaser` - building and publishing Go releases
+- `actionlint` - linter for GitHub Actions workflow files
 - `unar` - archive extraction
 - `tele` - TUI Telegram client (homebrew-core)
 - `tele-beta` (tap `sorokin-vladimir/tap`) - the beta channel of `tele`, installed as a `tele-beta` binary so it can live next to the stable one

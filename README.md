@@ -235,7 +235,7 @@ xcode-select --install
 brew install mise thefuck gnupg git tlrc translate-shell neovim \
   zsh-autosuggestions zsh-syntax-highlighting fd fzf ripgrep \
   lazygit lazysql ec gitlogue curl yazi ast-grep bat btop ncdu tokei gh glow \
-  golangci-lint goreleaser unar pnpm lla tele
+  golangci-lint goreleaser actionlint unar pnpm lla tele
 
 # Third-party taps: trust first, then tap. Since Homebrew 6 `brew tap` loads
 # every formula to validate the tap and fails on untrusted ones

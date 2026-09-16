@@ -232,7 +232,7 @@ xcode-select --install
 brew install mise thefuck gnupg git tlrc translate-shell neovim \
   zsh-autosuggestions zsh-syntax-highlighting fd fzf ripgrep \
   lazygit lazysql ec gitlogue curl yazi ast-grep bat btop ncdu tokei gh glow \
-  golangci-lint goreleaser unar pnpm lla tele
+  golangci-lint goreleaser actionlint unar pnpm lla tele
 
 # Сторонние тапы: сначала trust, потом tap. С Homebrew 6 `brew tap` загружает
 # все формулы для проверки тапа и падает на недоверенных

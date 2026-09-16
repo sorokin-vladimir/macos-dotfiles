@@ -62,6 +62,7 @@ cd ~/Documents/macos-dotfiles
 - `glow` - рендеринг Markdown в терминале
 - `golangci-lint` - линтер для Go
 - `goreleaser` - сборка и публикация релизов Go
+- `actionlint` - линтер для workflow-файлов GitHub Actions
 - `unar` - распаковка архивов
 - `tele` - TUI-клиент Telegram (homebrew-core)
 - `tele-beta` (tap `sorokin-vladimir/tap`) - бета-канал `tele`, ставится как бинарь `tele-beta` (можно держать вместе со стабильным)
