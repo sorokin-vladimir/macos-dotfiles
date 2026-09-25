@@ -241,7 +241,7 @@ brew install mise thefuck gnupg git tlrc translate-shell neovim \
 # every formula to validate the tap and fails on untrusted ones
 brew trust --tap sorokin-vladimir/tap
 brew tap sorokin-vladimir/tap
-brew install tele-beta
+brew install tele-beta downprint
 
 # weathr is not in homebrew-core
 brew trust --tap veirt/veirt

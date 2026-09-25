@@ -67,6 +67,7 @@ the GUI application list is an arrow-key picker.
 - `unar` - archive extraction
 - `tele` - TUI Telegram client (homebrew-core)
 - `tele-beta` (tap `sorokin-vladimir/tap`) - the beta channel of `tele`, installed as a `tele-beta` binary so it can live next to the stable one
+- `downprint` (tap `sorokin-vladimir/tap`) - Markdown to PDF with GitHub-like styling; it prints through headless Chrome, so it needs a Chromium-based browser (`ungoogled-chromium` from the GUI app list will do)
 - `weathr` (tap `veirt/veirt`) - terminal weather app with ASCII animations; not in homebrew-core, so the script trusts `veirt/veirt` and then taps it
 - `lsoff` (tap `yutat23/tap`) - CLI/TUI that shows which processes are listening on TCP/UDP ports and can kill the one holding a port; not in homebrew-core, so the script trusts `yutat23/tap` and then taps it
 

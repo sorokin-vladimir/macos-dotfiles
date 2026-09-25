@@ -302,10 +302,11 @@ install_homebrew_packages() {
   # the tap. Trusting afterwards is too late: the tap fails with
   # "invalid syntax in tap!". So trust first, then tap.
 
-  # tele-beta lives in the custom tap (stable tele comes from homebrew-core)
+  # tele-beta and downprint live in the custom tap (stable tele comes from
+  # homebrew-core)
   brew trust --tap sorokin-vladimir/tap
   brew tap sorokin-vladimir/tap
-  brew install tele-beta
+  brew install tele-beta downprint
 
   # weathr lives in its own tap, not in homebrew-core
   brew trust --tap veirt/veirt

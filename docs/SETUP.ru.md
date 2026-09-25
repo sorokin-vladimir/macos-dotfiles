@@ -66,6 +66,7 @@ cd ~/Documents/macos-dotfiles
 - `unar` - распаковка архивов
 - `tele` - TUI-клиент Telegram (homebrew-core)
 - `tele-beta` (tap `sorokin-vladimir/tap`) - бета-канал `tele`, ставится как бинарь `tele-beta` (можно держать вместе со стабильным)
+- `downprint` (tap `sorokin-vladimir/tap`) - Markdown в PDF со стилями как на GitHub; печатает через headless Chrome, поэтому нужен браузер на Chromium (подойдет `ungoogled-chromium` из списка GUI-приложений)
 - `weathr` (tap `veirt/veirt`) - погода в терминале с ASCII-анимациями; в homebrew-core его нет, поэтому скрипт сначала доверяет тапу `veirt/veirt`, потом подключает его
 - `lsoff` (tap `yutat23/tap`) - CLI/TUI, показывает, какие процессы слушают TCP/UDP-порты, и умеет прибить тот, что занял порт; в homebrew-core его нет, поэтому скрипт сначала доверяет тапу `yutat23/tap`, потом подключает его
 
