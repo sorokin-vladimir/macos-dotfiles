@@ -12,7 +12,11 @@
   - **Vim-style навигация:** `cmd+shift+h/j/k/l` для переключения между сплитами
   - **Quick terminal:** `cmd+g` (глобальный hotkey)
   - **Другие hotkeys:**
-    - `cmd+s` - новый split вниз
+    - `cmd+d` / `cmd+shift+d` - новый split вправо / вниз
+    - `alt+h/j/k/l` - переход между split-ами
+    - `alt+shift+h/j/k/l` - изменить размер split-а
+    - `alt+shift+e` - выровнять split-ы
+    - `alt+cmd+x` - закрыть split
     - `cmd+i` - inspector
     - `cmd+r` - перезагрузка конфига
     - `shift+enter` - шлёт ESC+Enter (перенос строки без отправки, например в Claude Code)

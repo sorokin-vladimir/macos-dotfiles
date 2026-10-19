@@ -7,6 +7,7 @@
 ```
 nvim/
 ├── lazyvim.json       # LazyVim extras (включённые пакеты экстр)
+├── stylua.toml        # Отступы lua: табы (копируй и в ~/.config/nvim)
 ├── config/
 │   ├── keymaps.lua    # Кастомные кейбинды
 │   └── options.lua    # Опции редактора
@@ -15,6 +16,7 @@ nvim/
     ├── codeium.lua    # AI assistant Codeium
     ├── colorscheme.lua # Цветовая схема
     ├── lint.lua        # Линтер (nvim-lint), настройка по типу файла
+    ├── oxc.lua         # oxfmt и oxlint для JS/TS из node_modules проекта
     ├── surround.lua    # Плагин surround для работы со скобками/кавычками
     └── which-key.lua   # Настройка which-key (отключение presets для операторов)
 ```
@@ -45,6 +47,9 @@ nvim/
 - `<leader>cP` - показать полный путь к файлу
 - `<leader>cp` - показать относительный путь от cwd
 
+### Стрелки
+- Стрелки отключены во всех режимах: вместо движения видимая часть буфера на 400 мс подсвечивается красным
+
 ## Плагины
 
 ### Codeium AI
@@ -60,6 +65,11 @@ nvim/
 - Линтер на основе `mfussenegger/nvim-lint`
 - Конфигурация по типу файла через `linters_by_ft`
 - Текущая настройка: Go — без дополнительных линтеров (используется встроенный LSP)
+
+### oxc (oxfmt, oxlint)
+- Форматирование JS/TS: `oxfmt`, если в проекте есть его конфиг (`.oxfmtrc.json` и т.п.), иначе `prettier` (extra `formatting.prettier`)
+- LSP `oxlint` работает рядом с eslint и стартует, только если в проекте есть `.oxlintrc.json` или `oxlint` в `package.json`
+- Оба бинарника берутся из `node_modules/.bin` проекта, глобально и через mason не ставятся
 
 ### Surround
 - Быстрая работа со скобками, кавычками, тегами
