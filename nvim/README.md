@@ -7,7 +7,7 @@
 ```
 nvim/
 ├── lazyvim.json       # LazyVim extras (включённые пакеты экстр)
-├── stylua.toml        # Отступы lua: табы (копируй и в ~/.config/nvim)
+├── stylua.toml        # Отступы lua: табы шириной 4 (копируй и в ~/.config/nvim)
 ├── config/
 │   ├── keymaps.lua    # Кастомные кейбинды
 │   └── options.lua    # Опции редактора
