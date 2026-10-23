@@ -6,34 +6,35 @@ keybind = global:cmd+g=toggle_quick_terminal
 # keybind = cmd+shift+l=goto_split:right
 # keybind = cmd+shift+j=goto_split:bottom
 # keybind = cmd+shift+k=goto_split:top
-keybind = alt+h=goto_split:left
-keybind = alt+j=goto_split:down
-keybind = alt+k=goto_split:up
-keybind = alt+l=goto_split:right
+# Split bindings use physical key codes (key_*) so they also work with the Russian layout
+keybind = alt+key_h=goto_split:left
+keybind = alt+key_j=goto_split:down
+keybind = alt+key_k=goto_split:up
+keybind = alt+key_l=goto_split:right
 
 keybind = cmd+i=inspector:toggle
 keybind = cmd+r=reload_config
 
 # Splits
 # keybind = cmd+s=new_split:down
-keybind = super+d=new_split:right
-keybind = super+shift+d=new_split:down
+keybind = super+key_d=new_split:right
+keybind = super+shift+key_d=new_split:down
 
 # Resize splits
-keybind = alt+shift+h=resize_split:left,20
-keybind = alt+shift+j=resize_split:down,20
-keybind = alt+shift+k=resize_split:up,20
-keybind = alt+shift+l=resize_split:right,20
+keybind = alt+shift+key_h=resize_split:left,20
+keybind = alt+shift+key_j=resize_split:down,20
+keybind = alt+shift+key_k=resize_split:up,20
+keybind = alt+shift+key_l=resize_split:right,20
 
 # Layout
-keybind = alt+shift+e=equalize_splits
-keybind = alt+super+x=close_surface
+keybind = alt+shift+key_e=equalize_splits
+keybind = alt+super+key_x=close_surface
 
 # Theme
 # theme = tokyonight_moon
 theme = dark:TokyoNight Moon,light:TokyoNight day
 initial-window = true
-shell-integration-features = no-cursor
+shell-integration-features = no-cursor,ssh-terminfo,ssh-env
 font-family = "MonaspiceNe Nerd Font Mono"
 font-style = Light
 font-feature = -calt
@@ -50,4 +51,10 @@ quick-terminal-position = center
 window-padding-x = 4
 window-padding-y = 4
 window-padding-balance = true
+window-save-state = always
+unfocused-split-opacity = 0.6
+
+notify-on-command-finish = unfocused
+notify-on-command-finish-after = 5s
+
 keybind = shift+enter=text:\x1b\r
